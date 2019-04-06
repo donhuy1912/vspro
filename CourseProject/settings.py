@@ -25,7 +25,7 @@ SECRET_KEY = 'j*4*k6d1k7(^&ejc7yezomn3o^s*0q9_xl+9vnx=h%or88c-b)'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['113.161.125.30']
 # STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
 # Application definition
@@ -51,6 +51,49 @@ INSTALLED_APPS = [
     'usernews',
 
     # Admin
+    'adminpage',
+    'adminaccounttype',
+    'adminenviromentcate',
+    'adminaccount',
+    'adminuserdetail',
+    'adminsubjectteacher',
+    'adminsubject',
+    'adminsubjectpart',
+    'adminsubjectlike',
+    'adminchapter',
+    'adminlesson',
+    'adminitem',
+    'adminactivitytype',
+    'adminactivity',
+    'adminactivityreply',
+    'adminactivitysubmittion',
+    'adminforum',
+    'adminnews',
+    'adminprojectshare',
+    'admincompetition',
+    'admincompetitionsubmittion',
+    'adminenrollment',
+    'adminlessonreply',
+    'adminactivitysubmittionreply',
+    'admintracking',
+    'adminforumlike',
+    'adminforumreply',
+    'adminnewsreply',
+    'adminprojectsharereply',
+    'adminprojectsharelike',
+    'admincompetitionsubmittionlike',
+    'admincompetitionsubmittionreply',
+    'adminintroduction',
+    'adminheader',
+    'adminfooter',
+    'adminhome',
+    'adminsliderunbar',
+    'adminuserrank',
+    'admincontact',
+    'adminfastchat',
+    'admingametype',
+    'admingamerate',
+    'admingame',
 ]
 
 MIDDLEWARE = [
