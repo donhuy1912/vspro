@@ -126,5 +126,6 @@ urlpatterns = [
     path('ajax/ajaxsearchusersub',ajax.ajaxsearchusersub),
     path('ajax/ajaxgetpoint', ajax.ajaxgetpoint),
 
-
+    path('ajax/lookbf', ajax.ajaxlookbf),
+    path('ajax/dellookbf', ajax.ajaxdellookbf),
 ]

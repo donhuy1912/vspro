@@ -674,27 +674,30 @@ def getRank(level):
     return Rank(ava,name)
 
 # hàm ktra Khi Load có link act thuộc chương chưa mở khóa
-def boolcheckUnlockChapter(chapter, account):
+def boolcheckUnlockChapter(chapter, account, sesslook):
     subject = chapter.subjectid
     enrollment = Enrollment.objects.filter(subjectid = subject).get(accountid = account)
     pos=0
     chapters=Chapter.objects.filter(subjectid=subject).order_by("order")
-    if chapter.chapterid == chapters[0].chapterid:
+    if sesslook != 0:
         return True
-    for chap in chapters:
-        pos+=1
-        if chap.chapterid ==chapter.chapterid :
-            break
-    chapbf =chapters[pos-1]
-    trackings = Tracking.objects.filter(chapterid = chapbf)
-    div = getCountActivityInChapter(chapbf)
-    if div != 0:
-        percent = int(len(trackings)/div*100)
     else:
+        if chapter.chapterid == chapters[0].chapterid:
+            return True
+        for chap in chapters:
+            pos+=1
+            if chap.chapterid == chapter.chapterid :
+                break
+        chapbf =chapters[pos-1]
+        trackings = Tracking.objects.filter(chapterid = chapbf)
+        div = getCountActivityInChapter(chapbf)
+        if div != 0:
+            percent = int(len(trackings)/div*100)
+        else:
+            return False
+        if percent > 66:
+            return True
         return False
-    if percent > 66:
-        return True
-    return False
 
 # Hàm check đã hoàn thành course (subject)
 def boolcheckSubjectProcess(subject, account):

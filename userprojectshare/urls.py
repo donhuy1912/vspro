@@ -20,4 +20,5 @@ urlpatterns = [
     path('ajax/ajaxfordelcomment', ajax.ajaxfordelcomment),
     path('ajax/ajaxmyprojectshare', ajax.ajaxmyprojectshare),
     path('ajax/ajaxfordelprojectshare', ajax.ajaxfordelprojectshare),
+
 ]

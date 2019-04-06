@@ -148,6 +148,11 @@ def coursechapter(request, id):
 
     if request.session.has_key('username') and subject.isenable == 1:
         account = Account.objects.get(username=request.session['username'])
+        if request.session.has_key('look'):
+            lookbf = request.session['look']
+        else:
+            lookbf = '0'
+        
         if boolcheckEnroll(subject, request.session['username']):
             subject = Subject.objects.get(subjectid = id)
             username = request.session['username']
@@ -163,7 +168,9 @@ def coursechapter(request, id):
                 'arrChapLes':arrChapLes,
                 'chapterShow':chapterShow,
                 'listchapter':listchapter,
-                'chapcomplete':chapcomplete
+                'chapcomplete':chapcomplete,
+
+                'lookbf': lookbf
             }
             return render(request, 'course/coursechapter.html',context)
         else:
@@ -240,7 +247,11 @@ def courseactivity(request, idsub, idchap, idles, iditem, idact):
 
     if request.session.has_key('username') and subject.isenable==1:
         account = Account.objects.get(username=request.session['username'])
-        if boolcheckEnroll(subject, request.session['username']) and boolcheckUnlockChapter(chapter, account):
+        if request.session.has_key('look'):
+            sesslook = request.session['look']
+        else:
+            sesslook = 0
+        if boolcheckEnroll(subject, request.session['username']) and boolcheckUnlockChapter(chapter, account, sesslook):
             subject = Subject.objects.get(subjectid = idsub)
             username = request.session['username']
             arrItemAct = getItemActivity(lesson)
@@ -271,6 +282,8 @@ def courseactivity(request, idsub, idchap, idles, iditem, idact):
            
             if requireact != None:
                 checkreact = boolcheckActivityTracking(requireact,account)
+                if sesslook != 0:
+                    checkreact = 1
             else:
                 checkreact = 1
             

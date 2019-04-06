@@ -1210,3 +1210,18 @@ def ajaxgetpoint(request):
     return JsonResponse(data)
 
         
+
+def ajaxlookbf(request):
+    request.session['look'] = '1'
+    data = {
+
+    }
+    return JsonResponse(data)
+
+def ajaxdellookbf(request):
+    if request.session.has_key('look'):
+        del request.session['look']
+    data = {
+
+    }
+    return JsonResponse(data)

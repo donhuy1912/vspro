@@ -31,7 +31,7 @@
     
     <!-- NProgress -->
     <link href="{% static 'homepage/vendors/nprogress/nprogress.css' %}" rel="stylesheet">
-
+	  <script src="{% static 'homepage/js/jquery-2.2.4.min.js' %}"></script>
     <!-- Font Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.5.0/css/all.css' integrity='sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU' crossorigin='anonymous'>
@@ -210,9 +210,18 @@
 		<div class="filters_listing sticky_horizontal">
 			<div class="container">
 				<ul class="clearfix">
-					<li>
-						
-					</li>
+				{% if account.accounttypeid.accounttypeid == 1 or account.accounttypeid.accounttypeid == 2 %}
+				<li>
+					{% if lookbf == '0' %}
+					<button id="lookbf" class="btn_1" > Xem trước </button>
+					{% else %}
+					<button id= "dellookbf" class="btn_1">Hủy Xem trước </button>
+					{% endif %}
+					 
+					 
+				</li>
+				{% endif %}
+					
 					<li>
 						
 					</li>
@@ -254,7 +263,29 @@
 						<a href="{% url 'course:coursepart' subject.subjectid %}" class="btn_1 full-width" style="width: 200px;margin-left: 30px;background-color: #ffc107;font-size: 12pt;padding-bottom: 15px"> << Quay Về</a>
               <!-- Chương -->
               {% for arr in arrChapLes %}
-              <div class="menu_section" style="{{arr.checkpass}}">
+							{% if lookbf == '1' %}
+									<div class="menu_section" style="">
+               
+                <ul class="nav side-menu">
+                  <li><a onclick={{arr.chapterid}} style="width: 275px;position:relative;z-index: 5;color: white;">
+                  <i class="fa fa-unlock">   
+                  </i>
+                  	{{arr.chapter}}
+                  	 <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                      {% for arrles in arr.listlesson %}
+                       <li><a href="{% url 'course:courselesson' idsub=subject.subjectid idchap=arr.numChapid idles=arrles.lessonid  %}" style="width: 200px;height: auto;margin-right: 5px;position: relative;z-index: 4;color: white;">
+                          {{arrles.lessonname}}
+                        </a></li>
+                      {% endfor %}
+                      
+                    </ul>
+                  </li>
+                 
+                </ul>
+              </div>
+							{% else %}
+							<div class="menu_section" style="{{arr.checkpass}}">
                
                 <ul class="nav side-menu">
                   <li><a onclick={{arr.chapterid}} style="width: 275px;position:relative;z-index: 5;color: white;">
@@ -279,6 +310,8 @@
                  
                 </ul>
               </div>
+							{% endif %}
+              
               {% endfor %}
               
               <!-- Chapter End Here -->
@@ -475,8 +508,36 @@
      }
  </script>
 
+ <script>
+		$("#lookbf").click(function(){
+			$.ajax({
+				 url: '/ajax/lookbf',
+				 data: {
+					 
+				 },
+				 dataType: 'json',
+				 success: function(data){
+					 location.reload(true)
+				 }
+			})
+		})
+ </script>
+<script>
+		$("#dellookbf").click(function(){
+			$.ajax({
+				 url: '/ajax/dellookbf',
+				 data: {
+					 
+				 },
+				 dataType: 'json',
+				 success: function(data){
+					 location.reload(true)
+				 }
+			})
+		})
+ </script>
 	<!-- COMMON SCRIPTS -->
-    <script src="{% static 'homepage/js/jquery-2.2.4.min.js' %}"></script>
+    
  
     <script src="{% static 'homepage/js/main.js' %}"></script>
 	<script src="{% static 'homepage/assets/validate.js' %}"></script>'
