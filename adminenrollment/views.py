@@ -1,0 +1,87 @@
+from django.shortcuts import render, redirect
+from homepage.models import *
+from datetime import datetime
+# Create your views here.
+
+def index(request):
+    enrollments = Enrollment.objects.all()
+
+    for enrollment in enrollments:
+        enrollment.createdate = enrollment.createdate
+        enrollment.editdate = enrollment.editdate
+
+    context = {'enrollments': enrollments}
+    return render(request, 'adminenrollment/enrollment_show.html', context)
+
+def create(request):
+    if request.method == 'POST':
+        enrollment = Enrollment( 
+                                accountid = Account.objects.get(accountid = request.POST['accountid']),
+                                subjectid = Subject.objects.get(subjectid = request.POST['subjectid']),
+                                createdate= datetime.now(), 
+                                editdate= datetime.now(),
+                                isenable=request.POST['isenable'],  
+                                note=request.POST['note'])
+        enrollment.save()
+        return redirect('/adminenrollment/')
+    else:
+        accounts = Account.objects.all()
+        subjects = Subject.objects.all()
+        
+        for account in accounts:
+            account.createdate = account.createdate
+            account.editdate = account.editdate
+
+        for subject in subjects:
+            subject.createdate = subject.createdate
+            subject.editdate = subject.editdate
+        
+        context = {
+            'accounts': accounts,
+            'subjects': subjects,
+        }
+    return render(request, 'adminenrollment/enrollment_create.html', context)
+
+def edit(request, id):
+    enrollment = Enrollment.objects.get(enrollmentid=id)
+    enrollment.createdate = enrollment.createdate
+    enrollment.editdate = datetime.now()
+
+    accounts = Account.objects.all()
+    subjects = Subject.objects.all()
+        
+    for account in accounts:
+        account.createdate = account.createdate
+        account.editdate = account.editdate
+
+    for subject in subjects:
+        subject.createdate = subject.createdate
+        subject.editdate = subject.editdate
+        
+    context = {
+        'accounts': accounts,
+        'subjects': subjects,
+        'enrollment': enrollment
+    }
+    
+    return render(request, 'adminenrollment/enrollment_edit.html', context)
+
+def getNum(x):
+    return int(''.join(ele for ele in x if ele.isdigit()))
+
+def update(request, id):
+    enrollment = Enrollment.objects.filter(enrollmentid = id).update(accountid = Account.objects.get(accountid = getNum(request.POST['accountid'])))
+    enrollment = Enrollment.objects.filter(enrollmentid = id).update(subjectid = Subject.objects.get(subjectid = getNum(request.POST['subjectid'])))
+    enrollment = Enrollment.objects.get(enrollmentid=id)
+    enrollment.createdate = enrollment.createdate
+    enrollment.editdate = datetime.now()
+    enrollment.isenable = request.POST['isenable']
+    enrollment.note = request.POST['note']
+    enrollment.save()
+    return redirect('/adminenrollment/')
+
+
+def delete(request, id):
+    enrollment = Enrollment.objects.get(enrollmentid= id)
+    enrollment.delete()
+    return redirect('/adminenrollment/')

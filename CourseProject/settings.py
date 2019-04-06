@@ -94,10 +94,10 @@ WSGI_APPLICATION = 'CourseProject.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'VS-Pro',
+        'NAME': 'vs-pro',
         'USER': 'root',
-        'PASSWORD': '',
-        'HOST': '127.0.0.1',
+        'PASSWORD': 'Abcd@123',
+        'HOST': '::1',
         'PORT': '3306',
     }
 }
