@@ -209,13 +209,13 @@
 
 		<div class="filters_listing sticky_horizontal">
 			<div class="container">
-				<ul class="clearfix">
+				<ul class="clearfix" style="padding-left:80%">
 				{% if account.accounttypeid.accounttypeid == 1 or account.accounttypeid.accounttypeid == 2 %}
 				<li>
 					{% if lookbf == '0' %}
-					<button id="lookbf" class="btn_1" > Xem trước </button>
+					<button id="lookbf" class="btn_1" ><i class="icon-eye"></i> Xem trước </button>
 					{% else %}
-					<button id= "dellookbf" class="btn_1">Hủy Xem trước </button>
+					<button id= "dellookbf" class="btn_1"><i class="icon-eye-off"></i>Hủy Xem trước </button>
 					{% endif %}
 					 
 					 

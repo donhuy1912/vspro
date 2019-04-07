@@ -1423,14 +1423,14 @@ def activitycreate(request, idsub, idchap, idles, iditem):
                       
                         nameScorm = nameScorm.replace('/media/','')
                         nameScorm = nameScorm.replace('.zip','')
-                        
-                        s = '.'
-                        m = "\\"
-                        for i in urlavatar:
-                            if i == '/':
-                                s += m
-                            else:
-                                s += i
+                        s = '.' + urlavatar   
+                    #    s = '.'
+                    #    m = "'\\'"
+                    #    for i in urlavatar:
+                    #        if i == '/':
+                    #            s += m
+                    #        else:
+                    #            s += i
 
                     unzip = ZipFile(s)
                     urlunzip='./media/unzip/' + nameScorm
@@ -1523,14 +1523,14 @@ def activitySPECcreate(request, idsub, idchap, idles, iditem):
                       
                     nameScorm = nameScorm.replace('/media/','')
                     nameScorm = nameScorm.replace('.zip','')
-                        
-                    s = '.'
-                    m = "\\"
-                    for i in urlavatar:
-                        if i == '/':
-                            s += m
-                        else:
-                            s += i
+                    s = '.' + urlavatar   
+                    # s = '.'
+                    # m = "\\"
+                    # for i in urlavatar:
+                    #     if i == '/':
+                    #         s += m
+                    #     else:
+                    #         s += i
 
                 unzip = ZipFile(s)
                 urlunzip='./media/unzip/' + nameScorm
@@ -1687,14 +1687,14 @@ def activityedit(request, idsub, idchap, idles, iditem,idact):
                             
                                 nameScorm = nameScorm.replace('/media/','')
                                 nameScorm = nameScorm.replace('.zip','')
-                                
-                                s = '.'
-                                m = "\\"
-                                for i in urlavatar:
-                                    if i == '/':
-                                        s += m
-                                    else:
-                                        s += i
+                                s = '.' + urlavatar   
+                                # s = '.'
+                                # m = "\\"
+                                # for i in urlavatar:
+                                #     if i == '/':
+                                #         s += m
+                                #     else:
+                                #         s += i
 
                                 unzip = ZipFile(s)
                                 urlunzip='./media/unzip/' + nameScorm
@@ -1713,14 +1713,14 @@ def activityedit(request, idsub, idchap, idles, iditem,idact):
                         
                         nameScorm = nameScorm.replace('/media/','')
                         nameScorm = nameScorm.replace('.zip','')
-                            
-                        s = '.'
-                        m = "\\"
-                        for i in urlavatar:
-                            if i == '/':
-                                s += m
-                            else:
-                                s += i
+                        s = '.' + urlavatar   
+                        # s = '.'
+                        # m = "\\"
+                        # for i in urlavatar:
+                        #     if i == '/':
+                        #         s += m
+                        #     else:
+                        #         s += i
 
                         unzip = ZipFile(s)
                         urlunzip='./media/unzip/' + nameScorm

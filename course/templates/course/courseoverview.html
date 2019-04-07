@@ -265,7 +265,7 @@
 
 						<div class="indent_title_in">
 							<i class="pe-7s-display1" style="color:#ff66a3"></i>
-							<h3 style="color:#ff66a3">Bài {{arrSpecial.count}}:&nbsp{{arrSpecial.chapter.chaptername}}
+							<h3 style="color:#ff66a3" style="font-family:Arial, Helvetica, sans-serif">Bài {{arrSpecial.count}}:&nbsp{{arrSpecial.chapter.chaptername}} <br>
 								<a title="Chỉnh Sửa Bài" style="padding-left: 60%" href="{% url 'course:chapteredit' idsub=subject.subjectid idchap=arrSpecial.chapter.chapterid %}"><span class="fa fa-edit" style="font-size: 14pt;color:#ff0066"></span></a>&nbsp&nbsp&nbsp
 								<a title="Tạo Bài" href="{% url 'course:chaptercreate' idsub=subject.subjectid %}"><span style="font-size: 14pt;color:#ff0066"  class="fa fa-calendar-plus-o" ></span></a>&nbsp&nbsp&nbsp
 								<a title="Sắp Xếp Bài" href="{% url 'course:chapincourse' idsub=subject.subjectid %}"><span style="font-size: 14pt;color:#ff0066"  class="fa fa-sort-numeric-asc" ></span></a></h3>
@@ -277,8 +277,8 @@
 								<table class="table table-responsive add_bottom_30">
 									<thead>
 										<tr style="background-color:#ffe6f2">
-											<th style="width: 20%;font-size:14pt;color:#b300b3">Chủ Đề {{classlesson.count}}:</th>
-											<th style="width: 45%;font-size:14pt;color:#b300b3">{{classlesson.lesson.lessonname}}</th>
+											<th style="width: 20%;font-size:14pt;color:#b300b3;font-family:Arial, Helvetica, sans-serif">Chủ Đề {{classlesson.count}}:</th>
+											<th style="width: 45%;font-size:14pt;color:#b300b3;font-family:Arial, Helvetica, sans-serif">{{classlesson.lesson.lessonname}}</th>
 											<th style="width: 35%;font-size:14pt">
 											<a title="Chỉnh Sửa Chủ Đề" style="padding-left:50%" href="{% url 'course:lessonedit' idsub=subject.subjectid idchap=arrSpecial.chapter.chapterid idles=classlesson.lesson.lessonid %}"><span class="fa fa-edit" style="font-size: 14pt;color: #800080"></span></a>&nbsp&nbsp&nbsp
 											
@@ -291,7 +291,7 @@
 									{% for item in classlesson.items %}
 							
 										<tr style="background:">
-											<td style="font-size:12pt"><strong style="color: #595959">Nhóm HĐ {{item.count}}</strong></td>
+											<td style="font-size:12pt"><strong style="color: #595959" style="font-family:Arial, Helvetica, sans-serif">Nhóm HĐ {{item.count}}</strong></td>
 											<td style="font-size:12pt"><a href="#"><strong style="color:#595959">{{item.item.itemname}}</strong></a></td>
 											<td class="rating">
 												<a title="Chỉnh Sửa Nhóm Hoạt Động" style="padding-left: 60%" href="{% url 'course:itemedit' idsub=subject.subjectid idchap=arrSpecial.chapter.chapterid idles=classlesson.lesson.lessonid iditem=item.item.itemid %}"><span class="fa fa-edit" style="font-size: 14pt;color: #4d4d4d"></span></a>&nbsp
@@ -302,7 +302,7 @@
 										{% for act in item.activities %}
 											<tr>
 											<td></td>
-											<td><a href="#" style="color:#4da6ff">{{act.activityname}}</a></td>
+											<td><a href="#" style="color:#4da6ff" style="font-family:Arial, Helvetica, sans-serif">{{act.activityname}}</a></td>
 											<td class="rating">
 												&nbsp&nbsp&nbsp&nbsp&nbsp<a title="Chỉnh Sửa Hoạt Động" style="padding-left: 60%" href="{% url 'course:activityedit' idsub=subject.subjectid idchap=arrSpecial.chapter.chapterid idles=classlesson.lesson.lessonid iditem=item.item.itemid idact=act.activityid %}"><span class="fa fa-edit" style="font-size: 14pt;color: #3f9fff"></span></a>&nbsp
 												<a title="Tạo Hoạt Động" href="{% url 'course:activitycreate' idsub=subject.subjectid idchap=arrSpecial.chapter.chapterid idles=classlesson.lesson.lessonid iditem=item.item.itemid %}"><span style="font-size: 14pt;color: #3f9fff"  class="fa fa-calendar-plus-o"></span></a>&nbsp

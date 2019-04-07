@@ -190,13 +190,14 @@ def teachergamecreate(request,idsub):
                     if nameScorm != '':
                         nameScorm = nameScorm.replace('/media/','')
                         nameScorm = nameScorm.replace('.zip','')
-                        s = '.'
-                        m = "\\"
-                        for i in urlscorm:
-                            if i == '/':
-                                s += m
-                            else:
-                                s += i
+                        s = '.' + urlavatar
+                        # s = '.'
+                        # m = "\\"
+                        # for i in urlscorm:
+                        #     if i == '/':
+                        #         s += m
+                        #     else:
+                        #         s += i
 
                         unzip = ZipFile(s)
                         urlunzip='./media/unzip/' + nameScorm
@@ -282,13 +283,14 @@ def teachergameedit(request,idsub,idgame):
                         if nameScorm != game.link:
                             nameScorm = nameScorm.replace('/media/','')
                             nameScorm = nameScorm.replace('.zip','')
-                            s = '.'
-                            m = "\\"
-                            for i in urlscorm:
-                                if i == '/':
-                                    s += m
-                                else:
-                                    s += i
+                            s = '.' + urlscorm
+                            # s = '.'
+                            # m = "\\"
+                            # for i in urlscorm:
+                            #     if i == '/':
+                            #         s += m
+                            #     else:
+                            #         s += i
 
                             unzip = ZipFile(s)
                             urlunzip='./media/unzip/' + nameScorm
