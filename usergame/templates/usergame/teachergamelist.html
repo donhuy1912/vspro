@@ -154,7 +154,7 @@
 							{% comment %} <li><a href="{% url 'homepage:profile' account.accountid %}">Chỉnh Sửa Tài Khoản</a></li> {% endcomment %}
 							
 							<li><a href="{% url 'course:dashboard' %}"><i class="fa fa-home" style="font-size:14pt"></i>&nbsp Trang Chủ</a></li>
-							<li><a href="#"><i class="fa fa-id-badge" style="font-size:14pt"></i>&nbsp&nbsp Hồ Sơ</a></li>
+							<li><a href="{% url 'homepage:myprofile' account.accountid %}"><i class="fa fa-id-badge" style="font-size:14pt"></i>&nbsp&nbsp Hồ Sơ</a></li>
 							
 
 							{% if account.accounttypeid.accounttypeid == 1 %}
@@ -198,7 +198,29 @@
 		</div>
 	</section>
 	<!--/hero_in-->
-
+	<div class="filters_listing sticky_horizontal">
+			<div class="container">
+				<ul class="clearfix">
+					<li>
+						<div class="switch-field">
+						
+							
+						</div>
+					</li>
+					<li>
+						
+					</li>
+					<li>
+						{% if account.accounttypeid.accounttypeid == 1 or account.accounttypeid.accounttypeid == 2 %}
+						<a href="{% url 'usergame:teachergamecreate' subject.subjectid %}" >
+						<button class="btn_1" style="height:50px;padding-top:13px;background: #662d91"><i class="fa fa-edit"></i>&nbspThêm Trò Chơi</button>
+						</a>
+						{% endif %}
+					</li>
+				</ul>
+			</div>
+			<!-- /container -->
+		</div>
 	<div class="container margin_60_35" style="width: 100%;margin-right: 10%;margin-left: 10%;">
 		<div class="pricing-container cd-has-margins" style="width: 80%">
 		<div class="pricing-switcher">

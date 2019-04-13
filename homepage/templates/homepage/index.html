@@ -366,7 +366,7 @@
 	</div>
 	<!-- /container -->
 </div>
-<div id="live-chat" style="background-color: #33ddff">
+<div id="live-chat" style="background-color: #33ddff;z-index: 10">
 		
 		<section id="chatheader" class="clearfix" style="    background: #293239;border-radius: 5px 5px 0 0;color: #fff;cursor: pointer;padding: 16px 24px;">
 			
@@ -383,13 +383,13 @@
 				
 				<div class="chat-message clearfix">
 					
-					<img src="http://lorempixum.com/32/32/people" alt="" width="32" height="32">
+					<img src="https://cdnmedia.baotintuc.vn/2014/12/04/12/13/avatar.jpg" alt="" width="32" height="32">
 
 					<div class="chat-message-content clearfix">
 						
 						<span class="chat-time">13:35</span>
 
-						<h5><p>Chào bạn!</p></h5>
+						
 
 						<p>Chúng tôi có thể giúp gì được cho bạn!</p>
 
@@ -422,7 +422,22 @@
 	<script>
 	$("#inputchat").on('keyup', function (e) {
     if (e.keyCode == 13) {
-        alert("1h tiếp ")
+		var content=$("#inputchat").val();
+
+        if (content != "")
+		{
+			$.ajax({
+			url: '/ajax/ajaxsentmes/',
+			data: {
+				'content': content,
+			},
+			dataType: 'json',
+			success: function (data) {
+				console.log('No');
+			}
+			});
+
+		}
     }
 		});
 	</script>

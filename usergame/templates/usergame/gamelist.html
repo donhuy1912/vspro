@@ -21,7 +21,7 @@
     <link href="{% static 'homepage/css/style.css' %}" rel="stylesheet">
 	<link href="{% static 'homepage/css/vendors.css' %}" rel="stylesheet">
 	<link href="{% static 'homepage/css/icon_fonts/css/all_icons.min.css' %}" rel="stylesheet">
-	
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<!-- SPECIFIC CSS -->
 	<link href="{% static 'homepage/css/tables.css' %}" rel="stylesheet">
 
@@ -194,7 +194,29 @@
 		</div>
 	</section>
 	<!--/hero_in-->
-
+	<div class="filters_listing sticky_horizontal">
+			<div class="container">
+				<ul class="clearfix">
+					<li>
+						<div class="switch-field">
+						
+							
+						</div>
+					</li>
+					<li>
+						
+					</li>
+					<li>
+						{% if account.accounttypeid.accounttypeid == 1 or account.accounttypeid.accounttypeid == 2 %}
+						<a href="{% url 'usergame:teachergamelist' subject.subjectid %}" >
+						<button class="btn_1" style="height:50px;padding-top:13px;background: #662d91"><i class="fa fa-edit"></i>&nbspQuản Lý Trò Chơi</button>
+						</a>
+						{% endif %}
+					</li>
+				</ul>
+			</div>
+			<!-- /container -->
+		</div>
 	<div class="container margin_60_35" style="width: 100%;margin-right: 10%;margin-left: 10%;">
 		<div class="pricing-container cd-has-margins" style="width: 80%">
 		<div class="pricing-switcher">

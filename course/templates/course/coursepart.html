@@ -152,7 +152,7 @@
 							{% comment %} <li><a href="{% url 'homepage:profile' account.accountid %}">Chỉnh Sửa Tài Khoản</a></li> {% endcomment %}
 							
 							<li><a href="{% url 'course:dashboard' %}"><i class="fa fa-home" style="font-size:14pt"></i>&nbsp Trang Chủ</a></li>
-							<li><a href="#"><i class="fa fa-id-badge" style="font-size:14pt"></i>&nbsp&nbsp Hồ Sơ</a></li>
+							<li><a href="{% url 'homepage:myprofile' account.accountid %}"><i class="fa fa-id-badge" style="font-size:14pt"></i>&nbsp&nbsp Hồ Sơ</a></li>
 							
 
 							{% if account.accounttypeid.accounttypeid == 1 %}
@@ -237,7 +237,7 @@
 						<figure class="block-reveal">
 							<div class="block-horizzontal"></div>
 							<a href="{% url 'course:coursechapter' subject.subjectid %}"><img src="{{subpart1.avatar}}" class="img-fluid" alt=""></a>
-							<div class="preview"><span>Preview course</span></div>
+							<div class="preview"><span>Tham gia</span></div>
 						</figure>
 					</div>
 					<div class="col-lg-7">
@@ -271,7 +271,7 @@
 						<figure class="block-reveal">
 							<div class="block-horizzontal"></div>
 							<a href="{% url 'usergame:gamelist' subject.subjectid %}"><img src="{{subpart2.avatar}}" class="img-fluid" alt=""></a>
-							<div class="preview"><span>Preview course</span></div>
+							<div class="preview"><span>Tham gia</span></div>
 						</figure>
 					</div>
 					<div class="col-lg-7">
@@ -296,7 +296,7 @@
 						<figure class="block-reveal">
 							<div class="block-horizzontal"></div>
 							<a href="{% url 'userprojectshare:projectsharenew' %}"><img src="{{subpart3.avatar}}" class="img-fluid" alt=""></a>
-							<div class="preview"><span>Preview course</span></div>
+							<div class="preview"><span>Tham gia</span></div>
 						</figure>
 					</div>
 					<div class="col-lg-7">
@@ -322,16 +322,16 @@
 						<figure class="block-reveal">
 							<div class="block-horizzontal"></div>
 							<a href="{% url 'course:userforumcourse' subpart4.subjectid.subjectid %}"><img src="{{subpart4.avatar}}" class="img-fluid" alt=""></a>
-							<div class="preview"><span>Preview course</span></div>
+							<div class="preview"><span>Tham gia</span></div>
 						</figure>
 					</div>
 					<div class="col-lg-7">
 						<div class="wrapper">
 							<a href="#0" class="wish_bt"></a>
 							<div class="price">CÙNG NHAU THẢO LUẬN</div>
-							<small>ARDUNO COMBO KÌ DIỆU</small>
+							
 							<h3>Mô tả</h3>
-							<p>Các em sẽ được cùng tham gia các trò chơi hấp dẫn </p>
+			
 							<div class="rating"><i class="icon_star voted"></i><i class="icon_star voted"></i><i class="icon_star voted"></i><i class="icon_star"></i><i class="icon_star"></i> <small>(145)</small></div>
 						</div>
 						<ul>

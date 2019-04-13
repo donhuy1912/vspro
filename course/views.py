@@ -854,7 +854,7 @@ def coursecreate(request):
                     editdate = datetime.now(),
                     subjectpartname  = "Nào ta cùng học",
                     content = '',
-                    avatar = '/media/ab.jpg',
+                    avatar = '/media/bc_baihoc.png',
                     order = 1
                 )
                 subpartnew1.save()
@@ -869,7 +869,7 @@ def coursecreate(request):
                     editdate = datetime.now(),
                     subjectpartname  = "Thế giới trò chơi",
                     content = '',
-                    avatar = '/media/ab.jpg',
+                    avatar = '/media/bc_trochoi.png',
                     order = 2
                 )
                 subpartnew2.save()
@@ -884,7 +884,7 @@ def coursecreate(request):
                     editdate = datetime.now(),
                     subjectpartname  = "Dự Án Của Em",
                     content = '',
-                    avatar = '/media/ab.jpg',
+                    avatar = '/media/bc_chiaseduan.png',
                     order = 3
                 )
                 subpartnew3.save()
@@ -899,7 +899,7 @@ def coursecreate(request):
                     editdate = datetime.now(),
                     subjectpartname  = "Cùng Nhau Thảo Luận",
                     content = '',
-                    avatar = '/media/ab.jpg',
+                    avatar = '/media/bc_diendang.png',
                     order = 4
                 )
                 subpartnew4.save()
