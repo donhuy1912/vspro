@@ -20,6 +20,7 @@
 	<link href="{% static 'homepage/css/bootstrap.min.css' %}" rel="stylesheet">
 	<link href="{% static 'homepage/css/style.css' %}" rel="stylesheet">
 	<link href="{% static 'homepage/css/vendors.css' %}" rel="stylesheet">
+	<link href="{% static 'homepage/css/barw3.css' %}" rel="stylesheet">
 	<link href="{% static 'homepage/css/icon_fonts/css/all_icons.min.css' %}" rel="stylesheet">
 	
 	<!-- SPECIFIC CSS -->
@@ -47,13 +48,18 @@
 	 <link href="{% static 'ckeditor/ckeditor_uploader/admin_base.css' %}" rel="stylesheet">
 	 <script type="text/javascript" src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
 	 <script type="text/javascript" src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
+	 <script>
+		function resizeIframe(obj) {
+		  obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
+		}
+	  </script>
 </head>
 
 <body class="nav-md" style="background: #121921;">
 	
 	<div id="page" class="theia-exception" style="height: auto;min-height: 600px">
 		
-		<header class="header menu_2">
+		<header id='header' class="header menu_2">
 			<div id="preloader"><div data-loader="circle-side"></div></div><!-- /Preload -->
 			<div id="logo">
 				<a href="{% url 'homepage:index' %}"><img src="{% static 'homepage/img/logo_2x.png' %}" width="149" height="42" data-retina="true" alt=""></a>
@@ -77,7 +83,7 @@
 						<ul>
 							<li><a href="{% url 'homepage:introduction' %}"><i class="fa fa-globe" style="font-size:14pt"></i>&nbsp&nbsp Tổng Quan</a></li>
 							<li><a href="{% url 'homepage:vision' %}"><i class="fa fa-heartbeat" style="font-size:14pt"></i>&nbsp&nbsp Sứ Mệnh</a></li>
-							<li><a href="{% url 'homepage:team' %}"><i class="fa fa-group" style="font-size:14pt"></i>&nbsp Đội Ngũ</a></li>
+							<li><a href="{% url 'homepage:team' %}"><i class="fa fa-group" style="font-size:14pt"></i>&nbsp Chuyên gia</a></li>
 							<li><a href="{% url 'homepage:aboutus' %}"><i class="fa fa-id-badge" style="font-size:14pt"></i>&nbsp &nbsp Về Chúng Tôi</a></li>
 							{% comment %} <li><a href="contacts.html">Liên Hệ</a></li> {% endcomment %}
 						</ul>
@@ -90,7 +96,8 @@
 							<li><a href="{% url 'usergame:gamelist' 1 %}"><i class="fa fa-cubes" style="font-size:14pt"></i>&nbsp Trò Chơi</a></li>
 							<li><a href="{% url 'userprojectshare:projectshare' %}"><i class="fas fa-file-alt" style="font-size:14pt"></i>&nbsp&nbsp Dự Án</a></li>
 							<li><a href="{% url 'usercompetition:competitionenvironment' 1 %}"><i class="fas fa-award" style="font-size:14pt"></i>&nbsp&nbsp Cuộc Thi</a></li>
-							<li><a href="#"><i class="fa fa-comments" style="font-size:14pt"></i> Diễn Đàn</a></li>
+							<li><a href="{% url 'course:userforumcourse' 1 %}"><i class="fa fa-comments" style="font-size:14pt"></i> Diễn Đàn</a></li>
+							
 						</ul>
 					</li>
 
@@ -101,11 +108,8 @@
 							<li><a href="{% url 'usergame:gamelist' 2 %}"><i class="fa fa-cubes" style="font-size:14pt"></i>&nbsp Trò Chơi</a></li>
 							<li><a href="{% url 'userprojectshare:projectshare' %}"><i class="fas fa-file-alt" style="font-size:14pt"></i>&nbsp Dự Án</a></li>
 							<li><a href="{% url 'usercompetition:competitionenvironment' 2 %}"><i class="fas fa-award" style="font-size:14pt"></i>&nbsp Cuộc Thi</a></li>
-							<li><a href="#"><i class="fa fa-comments" style="font-size:14pt"></i> Diễn Đàn</a></li>
-							{% comment %} <li><a href="{% url 'course:coursechapter' 2 %}">Nào Ta Cùng Học</a></li>
-							<li><a href="course-detail.html">Trò Chơi Của Em</a></li>
-							<li><a href="course-detail.html">Dự Án Của Em</a></li>
-							<li><a href="courses-grid-sidebar.html">Cùng Nhau Thảo Luận</a></li> {% endcomment %}
+							<li><a href="{% url 'course:userforumcourse' 2 %}"><i class="fa fa-comments" style="font-size:14pt"></i> Diễn Đàn</a></li>
+							
 						</ul>
 					</li>
 
@@ -115,13 +119,9 @@
 							<li><a href="{% url 'course:coursechapter' 3 %}"><i class="fas fa-book-open" style="font-size:14pt"></i>&nbsp Bài Học</a></li>
 							<li><a href="{% url 'usergame:gamelist' 3 %}"><i class="fa fa-cubes" style="font-size:14pt"></i>&nbsp Trò Chơi</a></li>
 							<li><a href="{% url 'userprojectshare:projectshare' %}"><i class="	fas fa-file-alt" style="font-size:14pt"></i>&nbsp&nbsp Dự Án</a></li>
-							<li><a href="#"><i class="fa fa-comments" style="font-size:14pt"></i> Diễn Đàn</a></li>
+							<li><a href="{% url 'course:userforumcourse' 3 %}"><i class="fa fa-comments" style="font-size:14pt"></i> Diễn Đàn</a></li>
 							<li><a href="#"><i class="fas fa-file" style="font-size:14pt"></i>&nbsp&nbsp Tài Nguyên</a></li>
 							
-							{% comment %} <li><a href="{% url 'course:coursechapter' 3 %}">Nào Ta Cùng Học</a></li>
-							<li><a href="course-detail.html">Trò Chơi Của Em</a></li>
-							<li><a href="course-detail.html">Dự Án Của Em</a></li>
-							<li><a href="courses-grid-sidebar.html">Cùng Nhau Thảo Luận</a></li> {% endcomment %}
 						</ul>
 					</li>
 					<li><span><a href="#0">Khóa Học</a></span>
@@ -133,9 +133,9 @@
 						</ul>
 					</li>
 					
-					<li><span><a href="#0">Cuộc Thi</a></span>
+				<li><span><a href="#0">Cuộc Thi</a></span>
 						<ul>
-							<li><a href="#"><i class="fa fa-map" style="font-size:14pt"></i>&nbsp Chia Sẻ</a></li>
+							{% comment %} <li><a href="#"><i class="fa fa-map" style="font-size:14pt"></i>&nbsp Chia Sẻ</a></li> {% endcomment %}
 							<li><a href="{% url 'usercompetition:competitionenvironment' 1 %}"><i class="fa fa-paper-plane" style="font-size:14pt"></i>&nbsp Môi Trường Tynker</a></li>
 							<li><a href="{% url 'usercompetition:competitionenvironment' 2 %}"><i class="fa fa-paper-plane" style="font-size:14pt"></i>&nbsp Môi Trường Alice 3D</a></li>
 							<li><a href="{% url 'usercompetition:competitionenvironment' 3 %}"><i class="fa fa-paper-plane" style="font-size:14pt"></i>&nbsp Môi Trường Arduino</a></li>
@@ -145,17 +145,17 @@
 
 					<li><span><a href="#0">Hỏi Đáp</a></span>
 						<ul>
-							<li><a href="#"><i class="fa fa-newspaper-o" style="font-size:14pt"></i> Bài Viết Chia Sẻ</a></li>
-							<li><a href="#"><i class="fa fa-question-circle" style="font-size:14pt"></i>&nbsp Hỏi Đáp Chuyên Gia</a></li>
-							<li><a href="#"><i class="fa fa-recycle" style="font-size:14pt"></i> Kết Nối Cộng Đồng</a></li>
+							<li><a href="{% url 'userprojectshare:projectshare' %}"><i class="fa fa-file-alt" style="font-size:14pt"></i>&nbsp  Dự Án Chia Sẻ</a></li>
+							<li><a href="{% url 'userforum:userforum' %}"><i class="fa fa-question-circle" style="font-size:14pt"></i>&nbsp Hỏi Đáp Chuyên Gia</a></li>
+							<li><a href="{% url 'userforum:fastchat' %}"><i class="fa fa-recycle" style="font-size:14pt"></i> Kết Nối Cộng Đồng</a></li>
 						</ul>
 					</li>
 
 					<li><span><a href="#0">Hỗ Trợ</a></span>
 						<ul>
-							<li><a href="#"><i class="fa fa-sitemap" style="font-size:14pt"></i>&nbsp Sơ Đồ Hệ Thống</a></li>
-							<li><a href="#"><i class="fa fa-map-signs" style="font-size:14pt"></i>&nbsp Hướng Dẫn</a></li>
-							<li><a href="#"><i class="fa fa-phone" style="font-size:14pt"></i>&nbsp Liên Hệ</a></li>
+							<li><a href="{% url 'homepage:sitemap' %}"><i class="fa fa-sitemap" style="font-size:14pt"></i>&nbsp Sơ Đồ Hệ Thống</a></li>
+							<li><a href="{% url 'homepage:userguide' %}"><i class="fa fa-map-signs" style="font-size:14pt"></i>&nbsp Hướng Dẫn</a></li>
+							<li><a href="{% url 'homepage:contact' %}"><i class="fa fa-phone" style="font-size:14pt"></i>&nbsp Liên Hệ</a></li>
 						</ul>
 					</li>
 					
@@ -169,8 +169,8 @@
 							
 							{% comment %} <li><a href="{% url 'homepage:profile' account.accountid %}">Chỉnh Sửa Tài Khoản</a></li> {% endcomment %}
 							
-							<li><a href="{% url 'course:dashboard' %}"><i class="fa fa-home" style="font-size:14pt"></i>&nbsp Trang Chủ</a></li>
-							<li><a href="#"><i class="fa fa-id-badge" style="font-size:14pt"></i>&nbsp&nbsp Hồ Sơ</a></li>
+							<li><a href="{% url 'course:dashboard' %}"><i class="fa fa-hdd-o" style="font-size:14pt"></i>&nbsp Tiến Trình</a></li>
+							<li><a href="{% url 'homepage:myprofile' account.accountid %}"><i class="fa fa-id-badge" style="font-size:14pt"></i>&nbsp&nbsp Hồ Sơ</a></li>
 							
 
 							{% if account.accounttypeid.accounttypeid == 1 %}
@@ -210,7 +210,7 @@
 			<div class="wrapper">
 				<div class="container">
 					<h1 class="fadeInUp"><p style="font-size: 25pt">CHỦ ĐỀ {{lesson.order}}</p><span></span>{{lesson.lessonname}}</h1>
-				</div>
+					</div>
 			</div>
 		</section>
 		<!--/hero_in-->
@@ -288,7 +288,7 @@
 													{% endif %}
 													{% if arract.activitytypeid.activitytypeid == 7 %}
 													<i class="fa fa-laptop"></i>
-													{% endif %}																																											
+													{% endif %}																																												
 													{{arract.activityname}}
 												</a></li>
 											{% endfor %}	
@@ -346,9 +346,9 @@
   </div>
       	<div class="">
 			
-      		<div class="page-title">
-      			<div class="title_left">
-					  <h3 style="color: #ffc107;">HĐ {{activity.order}}: {{activity.activityname}}</h3>
+      		<div class="page-title"> 
+      			<div class="title_left" style="width:100%">
+					  <h3 style="color: #ffc107">HĐ {{activity.order}}: {{activity.activityname}}</h3>
 					  
 				  </div>
 				  
@@ -403,58 +403,94 @@
 						</div> 
 					{% endif %}
 					{% if checkreact == 1  %}
-						<div id="des" class="x_panel" style="width: 100%;">
-						<div class="x_title">
-							<h2>Hướng Dẫn</h2>
-							<ul class="nav navbar-right panel_toolbox">
-								<li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-								</li>
-								<li class="dropdown">
-								</li>
-							</ul>
-							<div class="clearfix"></div>
-						</div>
-						<div class="x_content">
-
-							<section id="web-application">
-								<h2 class="page-header">{{activity.description|safe}}</h2>
-
-							</section>
-							<button id="cfrmbut" class="btn_1 full-width" style="width: 13%;margin-left: 42%" onclick="confirm()" id="confirm2">Đã Đọc</button>
-						</div>
-				  		</div>
+					<div id="des" class="x_panel" style="width: 100%;">
+							<div class="x_title">
+								<h2>Hướng Dẫn</h2>
+								<ul class="nav navbar-right panel_toolbox">
+									<li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+									</li>
+									<li class="dropdown">
+									</li>
+								</ul>
+								<div class="clearfix"></div>
+							</div>
+							<div class="x_content">
+	
+								<section id="web-application">
+									<h2 class="page-header">{{activity.description|safe}}</h2>
+	
+								</section>
+								<div class="w3-container" id='barprocess'>
+									<br>
+									<div class="w3-light-grey w3-round-xlarge">
+									<div style="width:0%;background-color:#ffc107;font-size: 16pt" align='left' id="myBar" class="w3-blue w3-round-xlarge" >0%</div>
+									</div>
+									<br>
+									</div>
+									
+									<script>
+									$(document).ready(function()
+									{
+										setTimeout(move,1500);
+									})
+									function move() {
+									  var elem = document.getElementById("myBar");   
+									  var width = 0;
+									  var id = setInterval(frame, 100);
+									  function frame() {
+										if (width >= 100) {
+										  clearInterval(id);
+										  $('#cfrmbut').css({'display':''})
+										  $('#barprocess').css({'display':'none'})
+										} else {
+										  width++; 
+										  elem.style.width = width + '%'; 
+										   elem.innerHTML = width/10;
+										}
+									  }
+									}
+									</script>
+								<div style='width:100%' align='right'>
+							<button id="cfrmbut" class="btn_1 full-width" style="width: 13%;margin-left: 42%;display: none" onclick="confirm()" id="confirm2">Bỏ qua</button>
+							</div>
+							</div>
+							  </div>
 					{% endif %}
 
       				
 					  
 
-      				<div id="learn" class="x_panel" style="width: 100%;height: 800px; visibility: hidden;">
+      				<div id="learn" class="x_panel" style="width: 100%;height: auto; visibility: hidden;">
       					<div class="x_title">
       						<h2>Nội Dung</h2>
       						<ul class="nav navbar-right panel_toolbox">
       							<li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
       							</li>
       							<li class="dropdown">
-
+									
       							</li>
       							
       						</ul>
-      						<div class="clearfix"></div>
+							  <div class="clearfix"></div>
+							  
       					</div>
-      					<div class="x_content">
+      					<div class="x_content" >
+								{{activity.content|safe}}
+							<div id="divscorm" style="display:none">
 
       						<section id="web-application">
 							 
       							{% comment %} {{activity.content|safe}} {% endcomment %}
 							<div style="width:100%;" align="center">
 								<!-- Can src hop ly-->
-								<iframe allowfullscreen style="width:765px; height:480px;"  src="{{activity.link}}" id="iframe" >
+								<iframe  style="width:1400px; height:768px;"  src="{{activity.link}}" id="iframe" onload="resizeIframe(this)" allowfullscreen>
 								</iframe>
 							</div>
 							  </section>
+							</div>
 							   <div align="center">
-							  	<button  style="background-color: #40ff00" class="btn_1 " id="zoomout"><i class="fa fa-search-plus" style="font-size:16pt"></i> </button>
-							  	<button  style="display:none;background-color:#ffc107"  class="btn_1 " id="zoomin"><i class="fa fa-search-minus" style="font-size:16pt"></i></button>
+							  	<button  class="btn_1 " id="zoomout">Bắt Đầu</button>
+							  	<button  style="display:none;background-color:#ffc107"  class="btn_1 " id="zoomin">Trở Về</button>
 							  </div>
 							  <div id="passdiv" style="padding-left:85%;" >
 									<a href=""  style="display:none; width:100%"  class="btn_1" id="passnext"></a>
@@ -765,7 +801,7 @@
 		var circlem =$("#circlem");
 		circle.attr('class',"c100 p0 small");
 		var value = $("#actime").val();
-		var req=value/2;
+		var req=value/4;
 		var min =value-1;
 		var sec = 60;
 		
@@ -841,6 +877,7 @@
 	var zoomout = $("#zoomout");
 	var rightpart=$("#rightpart");
 	var iframe =$("#iframe");
+	var header =$("#header");
 	$("#zoomout").click(function()
 	{
 		zoomin.css({"display":""});
@@ -848,12 +885,18 @@
 		headpart.css({"display":"none"});
 		leftpart.css({"display":"none"});
 		hero_in.css({"display":"none"});
+		header.css({"display":"none"});
 		stickpart.css({"display":"none"});
 		rew.css({"display":"none"});
-		rightpart.css({"margin-left":"10%"});
+		rightpart.css({"margin-left":"2%"});
 		window.scrollTo(0,100);
 		$("#learn").css({"height":"900px"});
-		iframe.css({"height":"685px"});
+		iframe.css({"height":"900px"});
+		iframe.css({"padding-left":"1px"});
+		$("#divscorm").css({"display":""});
+		$("#learn").attr('class','sss');
+		iframe.zoom = "20%"
+		
 	});
 	$("#zoomin").click(function()
 	{
@@ -862,11 +905,16 @@
 		headpart.css({"display":""});
 		leftpart.css({"display":""});
 		hero_in.css({"display":""});
+		header.css({"display":""});
 		stickpart.css({"display":""});
 		rew.css({"display":""});
 		rightpart.css({"margin-left":"280px"});
 		window.scrollTo(0,500);
-		iframe.css({"height":"600px"});
+		iframe.css({"height":"768px"});
+		$("#learn").css({"height":"auto"});
+		$("#divscorm").css({"display":"none"});
+		$("#learn").attr('class','x_panel');
+		document.body.style.zoom = "100%"
 	});
 </script>
 

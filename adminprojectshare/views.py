@@ -7,148 +7,183 @@ from django.http import JsonResponse
 # Create your views here.
 
 def index(request):
-    projectshares = ProjectShare.objects.all()
-    for projectshare in projectshares:
-        projectshare.createdate = projectshare.createdate
-        projectshare.editdate = projectshare.editdate
-    context = {'projectshares': projectshares}
-    return render(request, 'adminprojectshare/projectshare_show.html', context)
+    if request.session.has_key('username'):
+        account = Account.objects.get(username = request.session['username'])
+        if account.accounttypeid.accounttypeid == 1:
+            projectshares = ProjectShare.objects.all()
+            for projectshare in projectshares:
+                projectshare.createdate = projectshare.createdate
+                projectshare.editdate = projectshare.editdate
+            context = {'projectshares': projectshares}
+            return render(request, 'adminprojectshare/projectshare_show.html', context)
+        else:
+            return redirect('homepage:index')
+    else:
+        return redirect('homepage:index')
 
 def create(request):
-    if request.method == 'POST':
-        # Lấy url của avatar
-        try:
-            token_avatar = request.FILES['avatar']
-        except:
-            token_avatar = None
-        ava = ''
-        if token_avatar != None:
-            ava = tokenFile(token_avatar)
-        
+    if request.session.has_key('username'):
+        account = Account.objects.get(username = request.session['username'])
+        if account.accounttypeid.accounttypeid == 1:
+            if request.method == 'POST':
+                # Lấy url của avatar
+                try:
+                    token_avatar = request.FILES['avatar']
+                except:
+                    token_avatar = None
+                ava = ''
+                if token_avatar != None:
+                    ava = tokenFile(token_avatar)
+                
 
-        projectshare = ProjectShare( 
-                                accountid = Account.objects.get(accountid = request.POST['accountid']),
-                                enviromentcateid = EnviromentCate.objects.get(enviromentcateid = request.POST['enviromentcateid']),
-                                projectsharetopicname=request.POST['projectsharename'], 
-                                createdate= datetime.now(), 
-                                editdate= datetime.now(),
-                                description = request.POST['description'],
-                                content=request.POST['content'],
-                                avatar=ava,
-                                link=request.POST['link'],  
-                                viewcount=request.POST['viewcount'],  
-                                likecount=request.POST['likecount'],  
-                                isenable=request.POST['isenable'],  
-                                note=request.POST['note'])
-        projectshare.save()
-        return redirect('/adminprojectshare/')
+                projectshare = ProjectShare( 
+                                        accountid = Account.objects.get(accountid = request.POST['accountid']),
+                                        enviromentcateid = EnviromentCate.objects.get(enviromentcateid = request.POST['enviromentcateid']),
+                                        projectsharetopicname=request.POST['projectsharename'], 
+                                        createdate= datetime.now(), 
+                                        editdate= datetime.now(),
+                                        description = request.POST['description'],
+                                        content=request.POST['content'],
+                                        avatar=ava,
+                                        link=request.POST['link'],  
+                                        viewcount=request.POST['viewcount'],  
+                                        likecount=request.POST['likecount'],  
+                                        isenable=request.POST['isenable'],  
+                                        note=request.POST['note'])
+                projectshare.save()
+                return redirect('/adminprojectshare/')
+            else:
+                # subjectparts = SubjectPart.objects.all()
+                # for subjectpart in subjectparts:
+                #     subjectpart.createdate = subjectpart.createdate
+                #     subjectpart.editdate = subjectpart.editdate
+
+                enviromentcates = EnviromentCate.objects.all()
+                for enviromentcate in enviromentcates:
+                    enviromentcate.createdate = enviromentcate.createdate
+                    enviromentcate.editdate = enviromentcate.editdate
+
+                accounts = Account.objects.all()
+                subjects = Subject.objects.all()
+                
+                for account in accounts:
+                    account.createdate = account.createdate
+                    account.editdate = account.editdate
+
+                for subject in subjects:
+                    subject.createdate = subject.createdate
+                    subject.editdate = subject.editdate
+                
+                context = {
+                    'accounts': accounts,
+                    'subjects': subjects,
+                    # 'subjectparts': subjectparts
+                    'enviromentcates': enviromentcates,
+                }
+            
+            return render(request, 'adminprojectshare/projectshare_create.html', context)
+        else:
+            return redirect('homepage:index')
     else:
-        # subjectparts = SubjectPart.objects.all()
-        # for subjectpart in subjectparts:
-        #     subjectpart.createdate = subjectpart.createdate
-        #     subjectpart.editdate = subjectpart.editdate
-
-        enviromentcates = EnviromentCate.objects.all()
-        for enviromentcate in enviromentcates:
-            enviromentcate.createdate = enviromentcate.createdate
-            enviromentcate.editdate = enviromentcate.editdate
-
-        accounts = Account.objects.all()
-        subjects = Subject.objects.all()
-        
-        for account in accounts:
-            account.createdate = account.createdate
-            account.editdate = account.editdate
-
-        for subject in subjects:
-            subject.createdate = subject.createdate
-            subject.editdate = subject.editdate
-        
-        context = {
-            'accounts': accounts,
-            'subjects': subjects,
-            # 'subjectparts': subjectparts
-            'enviromentcates': enviromentcates,
-        }
-       
-    return render(request, 'adminprojectshare/projectshare_create.html', context)
+        return redirect('homepage:index')
 
 def edit(request, id):
-    projectshare = ProjectShare.objects.get(projectsharetopicid=id)
-    projectshare.createdate = projectshare.createdate
-    projectshare.editdate = datetime.now()
+    if request.session.has_key('username'):
+        account = Account.objects.get(username = request.session['username'])
+        if account.accounttypeid.accounttypeid == 1:
+            projectshare = ProjectShare.objects.get(projectsharetopicid=id)
+            projectshare.createdate = projectshare.createdate
+            projectshare.editdate = datetime.now()
 
-    # subjectparts = SubjectPart.objects.all()
-    # for subjectpart in subjectparts:
-    #     subjectpart.createdate = subjectpart.createdate
-    #     subjectpart.editdate = subjectpart.editdate
+            # subjectparts = SubjectPart.objects.all()
+            # for subjectpart in subjectparts:
+            #     subjectpart.createdate = subjectpart.createdate
+            #     subjectpart.editdate = subjectpart.editdate
 
-    enviromentcates = EnviromentCate.objects.all()
-    for enviromentcate in enviromentcates:
-        enviromentcate.createdate = enviromentcate.createdate
-        enviromentcate.editdate = enviromentcate.editdate
+            enviromentcates = EnviromentCate.objects.all()
+            for enviromentcate in enviromentcates:
+                enviromentcate.createdate = enviromentcate.createdate
+                enviromentcate.editdate = enviromentcate.editdate
 
-    accounts = Account.objects.all()
-    subjects = Subject.objects.all()
-        
-    for account in accounts:
-        account.createdate = account.createdate
-        account.editdate = account.editdate
+            accounts = Account.objects.all()
+            subjects = Subject.objects.all()
+                
+            for account in accounts:
+                account.createdate = account.createdate
+                account.editdate = account.editdate
 
-    for subject in subjects:
-        subject.createdate = subject.createdate
-        subject.editdate = subject.editdate
-        
-    context = {
-        'accounts': accounts,
-        'subjects': subjects,
-        'projectshare': projectshare,
-        # 'subjectparts': subjectparts,
-        'enviromentcates': enviromentcates,
-    }
-    
-    return render(request, 'adminprojectshare/projectshare_edit.html', context)
+            for subject in subjects:
+                subject.createdate = subject.createdate
+                subject.editdate = subject.editdate
+                
+            context = {
+                'accounts': accounts,
+                'subjects': subjects,
+                'projectshare': projectshare,
+                # 'subjectparts': subjectparts,
+                'enviromentcates': enviromentcates,
+            }
+            
+            return render(request, 'adminprojectshare/projectshare_edit.html', context)
+        else:
+            return redirect('homepage:index')
+    else:
+        return redirect('homepage:index')
 
 def getNum(x):
     return int(''.join(ele for ele in x if ele.isdigit()))
 
 def update(request, id):
-    projectshare = ProjectShare.objects.filter(projectsharetopicid = id).update(accountid = Account.objects.get(accountid = getNum(request.POST['accountid'])))
-    
-    if request.POST.get('enviromentcateid')!= '0':
-        projectshare = ProjectShare.objects.filter(projectsharetopicid = id).update(enviromentcateid = EnviromentCate.objects.get(enviromentcateid = getNum(request.POST['enviromentcateid'])))
-    projectshare = ProjectShare.objects.get(projectsharetopicid=id)
+    if request.session.has_key('username'):
+        account = Account.objects.get(username = request.session['username'])
+        if account.accounttypeid.accounttypeid == 1:
+            projectshare = ProjectShare.objects.filter(projectsharetopicid = id).update(accountid = Account.objects.get(accountid = getNum(request.POST['accountid'])))
+            
+            if request.POST.get('enviromentcateid')!= '0':
+                projectshare = ProjectShare.objects.filter(projectsharetopicid = id).update(enviromentcateid = EnviromentCate.objects.get(enviromentcateid = getNum(request.POST['enviromentcateid'])))
+            projectshare = ProjectShare.objects.get(projectsharetopicid=id)
 
-    # Lấy url của avatar
-    try:
-        token_avatar = request.FILES['avatar']
-    except:
-        token_avatar = None
-    ava = ''
-    if token_avatar != None:
-        ava = tokenFile(token_avatar)
+            # Lấy url của avatar
+            try:
+                token_avatar = request.FILES['avatar']
+            except:
+                token_avatar = None
+            ava = ''
+            if token_avatar != None:
+                ava = tokenFile(token_avatar)
+            else:
+                ava = projectshare.avatar
+
+            projectshare.projectsharetopicname=request.POST['projectsharename']
+            projectshare.createdate=projectshare.createdate
+            projectshare.editdate=datetime.now()
+            projectshare.description=request.POST['description']
+            projectshare.content=request.POST['content']
+            projectshare.link=request.POST['link']
+            projectshare.viewcount=request.POST['viewcount']
+            projectshare.likecount=request.POST['likecount']
+            projectshare.isenable=request.POST['isenable']
+            projectshare.avatar=ava
+            projectshare.note=request.POST['note']
+            projectshare.save()
+            return redirect('/adminprojectshare/')
+        else:
+            return redirect('homepage:index')
     else:
-        ava = projectshare.avatar
-
-    projectshare.projectsharetopicname=request.POST['projectsharename']
-    projectshare.createdate=projectshare.createdate
-    projectshare.editdate=datetime.now()
-    projectshare.description=request.POST['description']
-    projectshare.content=request.POST['content']
-    projectshare.link=request.POST['link']
-    projectshare.viewcount=request.POST['viewcount']
-    projectshare.likecount=request.POST['likecount']
-    projectshare.isenable=request.POST['isenable']
-    projectshare.avatar=ava
-    projectshare.note=request.POST['note']
-    projectshare.save()
-    return redirect('/adminprojectshare/')
+        return redirect('homepage:index')
 
 
 def delete(request, id):
-    projectshare = ProjectShare.objects.get(projectsharetopicid= id)
-    projectshare.delete()
-    return redirect('/adminprojectshare/')
+    if request.session.has_key('username'):
+        account = Account.objects.get(username = request.session['username'])
+        if account.accounttypeid.accounttypeid == 1:
+            projectshare = ProjectShare.objects.get(projectsharetopicid= id)
+            projectshare.delete()
+            return redirect('/adminprojectshare/')
+        else:
+            return redirect('homepage:index')
+    else:
+        return redirect('homepage:index')
 
 
 #lấy giá trị subject được nhập vào để giới hạn giá trị show ra của subjectpart

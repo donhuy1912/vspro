@@ -5,112 +5,147 @@ from django.http import JsonResponse
 # Create your views here.
 
 def index(request):
-    lessonreplys = LessonReply.objects.all()
-    for lessonreply in lessonreplys:
-        lessonreply.createdate = lessonreply.createdate
-        lessonreply.editdate = lessonreply.editdate
-    context = {'lessonreplys': lessonreplys}
-    return render(request, 'adminlessonreply/lessonreply_show.html', context)
+    if request.session.has_key('username'):
+        account = Account.objects.get(username = request.session['username'])
+        if account.accounttypeid.accounttypeid == 1:
+            lessonreplys = LessonReply.objects.all()
+            for lessonreply in lessonreplys:
+                lessonreply.createdate = lessonreply.createdate
+                lessonreply.editdate = lessonreply.editdate
+            context = {'lessonreplys': lessonreplys}
+            return render(request, 'adminlessonreply/lessonreply_show.html', context)
+        else:
+            return redirect('homepage:index')
+    else:
+        return redirect('homepage:index')
 
 def create(request):
-    if request.method == 'POST':
-        lessonreply = LessonReply( 
-                                enrollmentid = Enrollment.objects.get(enrollmentid = request.POST['accountid']),
-                                lessonid = Lesson.objects.get(lessonid = request.POST['lessonid']),
-                                createdate= datetime.now(), 
-                                editdate= datetime.now(),
-                                content=request.POST['content'],
-                                isenable=request.POST['isenable'],  
-                                note=request.POST['note'])
-        lessonreply.save()
-        return redirect('/adminlessonreply/')
+    if request.session.has_key('username'):
+        account = Account.objects.get(username = request.session['username'])
+        if account.accounttypeid.accounttypeid == 1:
+            if request.method == 'POST':
+                lessonreply = LessonReply( 
+                                        enrollmentid = Enrollment.objects.get(enrollmentid = request.POST['accountid']),
+                                        lessonid = Lesson.objects.get(lessonid = request.POST['lessonid']),
+                                        createdate= datetime.now(), 
+                                        editdate= datetime.now(),
+                                        content=request.POST['content'],
+                                        isenable=request.POST['isenable'],  
+                                        note=request.POST['note'])
+                lessonreply.save()
+                return redirect('/adminlessonreply/')
+            else:
+                lessons = Lesson.objects.all()
+                for lesson in lessons:
+                    lesson.createdate = lesson.createdate
+                    lesson.editdate = lesson.editdate
+
+                enrollments = Enrollment.objects.all()
+                accounts = Account.objects.all()
+                subjects = Subject.objects.all()
+                
+                for account in accounts:
+                    account.createdate = account.createdate
+                    account.editdate = account.editdate
+                
+                for enrollment in enrollments:
+                    enrollment.createdate = enrollment.createdate
+                    enrollment.editdate = enrollment.editdate
+
+                for subject in subjects:
+                    subject.createdate = subject.createdate
+                    subject.editdate = subject.editdate
+                
+                context = {
+                    'enrollments': enrollments,
+                    'subjects': subjects,
+                    'lessons': lessons,
+                    'accounts': accounts,
+                }
+                
+            return render(request, 'adminlessonreply/lessonreply_create.html', context)
+        else:
+            return redirect('homepage:index')
     else:
-        lessons = Lesson.objects.all()
-        for lesson in lessons:
-            lesson.createdate = lesson.createdate
-            lesson.editdate = lesson.editdate
-
-        enrollments = Enrollment.objects.all()
-        accounts = Account.objects.all()
-        subjects = Subject.objects.all()
-        
-        for account in accounts:
-            account.createdate = account.createdate
-            account.editdate = account.editdate
-        
-        for enrollment in enrollments:
-            enrollment.createdate = enrollment.createdate
-            enrollment.editdate = enrollment.editdate
-
-        for subject in subjects:
-            subject.createdate = subject.createdate
-            subject.editdate = subject.editdate
-        
-        context = {
-            'enrollments': enrollments,
-            'subjects': subjects,
-            'lessons': lessons,
-            'accounts': accounts,
-        }
-        
-    return render(request, 'adminlessonreply/lessonreply_create.html', context)
+        return redirect('homepage:index')
 
 def edit(request, id):
-    lessonreply = LessonReply.objects.get(lessonreplyid=id)
-    lessonreply.createdate = lessonreply.createdate
-    lessonreply.editdate = datetime.now()
+    if request.session.has_key('username'):
+        account = Account.objects.get(username = request.session['username'])
+        if account.accounttypeid.accounttypeid == 1:
+            lessonreply = LessonReply.objects.get(lessonreplyid=id)
+            lessonreply.createdate = lessonreply.createdate
+            lessonreply.editdate = datetime.now()
 
-    lessons = Lesson.objects.all()
-    for lesson in lessons:
-        lesson.createdate = lesson.createdate
-        lesson.editdate = lesson.editdate
-        
-    enrollments = Enrollment.objects.all()
-    accounts = Account.objects.all()
-    subjects = Subject.objects.all()
-        
-    for enrollment in enrollments:
-        enrollment.createdate = enrollment.createdate
-        enrollment.editdate = enrollment.editdate
-    
-    for account in accounts:
-        account.createdate = account.createdate
-        account.editdate = account.editdate
+            lessons = Lesson.objects.all()
+            for lesson in lessons:
+                lesson.createdate = lesson.createdate
+                lesson.editdate = lesson.editdate
+                
+            enrollments = Enrollment.objects.all()
+            accounts = Account.objects.all()
+            subjects = Subject.objects.all()
+                
+            for enrollment in enrollments:
+                enrollment.createdate = enrollment.createdate
+                enrollment.editdate = enrollment.editdate
+            
+            for account in accounts:
+                account.createdate = account.createdate
+                account.editdate = account.editdate
 
-    for subject in subjects:
-        subject.createdate = subject.createdate
-        subject.editdate = subject.editdate
-        
-    context = {
-        'enrollments': enrollments,
-        'subjects': subjects,
-        'lessonreply': lessonreply,
-        'lessons': lessons,
-        'accounts': accounts,   
-    }
+            for subject in subjects:
+                subject.createdate = subject.createdate
+                subject.editdate = subject.editdate
+                
+            context = {
+                'enrollments': enrollments,
+                'subjects': subjects,
+                'lessonreply': lessonreply,
+                'lessons': lessons,
+                'accounts': accounts,   
+            }
 
-    return render(request, 'adminlessonreply/lessonreply_edit.html', context)
+            return render(request, 'adminlessonreply/lessonreply_edit.html', context)
+        else:
+            return redirect('homepage:index')
+    else:
+        return redirect('homepage:index')
 
 def getNum(x):
     return int(''.join(ele for ele in x if ele.isdigit()))
 
 def update(request, id):
-    lessonreply = LessonReply.objects.filter(lessonreplyid = id).update(enrollmentid = Enrollment.objects.get(enrollmentid = getNum(request.POST['accountid'])))
-    lessonreply = LessonReply.objects.filter(lessonreplyid = id).update(lessonid = Lesson.objects.get(lessonid = getNum(request.POST['lessonid'])))
-    lessonreply = LessonReply.objects.get(lessonreplyid=id)
-    lessonreply.createdate=lessonreply.createdate
-    lessonreply.editdate=datetime.now()
-    lessonreply.content=request.POST['content']
-    lessonreply.isenable=request.POST['isenable']
-    lessonreply.note=request.POST['note']
-    lessonreply.save()
-    return redirect('/adminlessonreply/')
+    if request.session.has_key('username'):
+        account = Account.objects.get(username = request.session['username'])
+        if account.accounttypeid.accounttypeid == 1:
+            lessonreply = LessonReply.objects.filter(lessonreplyid = id).update(enrollmentid = Enrollment.objects.get(enrollmentid = getNum(request.POST['accountid'])))
+            lessonreply = LessonReply.objects.filter(lessonreplyid = id).update(lessonid = Lesson.objects.get(lessonid = getNum(request.POST['lessonid'])))
+            lessonreply = LessonReply.objects.get(lessonreplyid=id)
+            lessonreply.createdate=lessonreply.createdate
+            lessonreply.editdate=datetime.now()
+            lessonreply.content=request.POST['content']
+            lessonreply.isenable=request.POST['isenable']
+            lessonreply.note=request.POST['note']
+            lessonreply.save()
+            return redirect('/adminlessonreply/')
+        else:
+            return redirect('homepage:index')
+    else:
+        return redirect('homepage:index')
 
 
 def delete(request, id):
-    lessonreply = LessonReply.objects.get(lessonreplyid= id)
-    lessonreply.delete()
-    return redirect('/adminlessonreply/')
+    if request.session.has_key('username'):
+        account = Account.objects.get(username = request.session['username'])
+        if account.accounttypeid.accounttypeid == 1:
+            lessonreply = LessonReply.objects.get(lessonreplyid= id)
+            lessonreply.delete()
+            return redirect('/adminlessonreply/')
+        else:
+            return redirect('homepage:index')
+    else:
+        return redirect('homepage:index')
 
 
 #lấy giá trị subject được nhập vào để giới hạn giá trị show ra của chapter

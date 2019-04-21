@@ -5,6 +5,7 @@ from . import ajax
 app_name = 'course'
 
 urlpatterns = [
+    path('mblock', views.mblock, name='mblock'),
     path('course/allcourse', views.allcourse, name='allcourse'),
     path('coursedetail/<int:id>/', views.coursedetail, name = 'coursedetail'),
     path('coursedetail/<int:id>/enroll', views.enroll, name = 'enroll'),

@@ -7,82 +7,102 @@ from datetime import datetime
 
 
 def index(request):
-    lessons = Lesson.objects.all()
-    for lesson in lessons:
-        lesson.createdate = lesson.createdate
-        lesson.editdate = lesson.editdate
-    context = {'lessons': lessons}
-    return render(request, 'adminlesson/lesson_show.html', context)
-
+    if request.session.has_key('username'):
+        account = Account.objects.get(username = request.session['username'])
+        if account.accounttypeid.accounttypeid == 1:
+            lessons = Lesson.objects.all()
+            for lesson in lessons:
+                lesson.createdate = lesson.createdate
+                lesson.editdate = lesson.editdate
+            context = {'lessons': lessons}
+            return render(request, 'adminlesson/lesson_show.html', context)
+        else:
+            return redirect('homepage:index')
+    else:
+        return redirect('homepage:index')
 
 def create(request):
-    if request.method == 'POST':
-        lesson = Lesson(
-            accountid=Account.objects.get(accountid=request.POST['accountid']),
-            chapterid=Chapter.objects.get(chapterid=request.POST['chapterid']),
-            lessonname=request.POST['lessonname'],
-            createdate=datetime.now(),
-            editdate=datetime.now(),
-            description=request.POST['description'],
-            content=request.POST['content'],
-            order=request.POST['order'],
-            isenable=request.POST['isenable'],
-            note=request.POST['note'])
-        lesson.save()
-        return redirect('/adminlesson/')
+    if request.session.has_key('username'):
+        account = Account.objects.get(username = request.session['username'])
+        if account.accounttypeid.accounttypeid == 1:
+            if request.method == 'POST':
+                lesson = Lesson(
+                    accountid=Account.objects.get(accountid=request.POST['accountid']),
+                    chapterid=Chapter.objects.get(chapterid=request.POST['chapterid']),
+                    lessonname=request.POST['lessonname'],
+                    createdate=datetime.now(),
+                    editdate=datetime.now(),
+                    description=request.POST['description'],
+                    content=request.POST['content'],
+                    order=request.POST['order'],
+                    isenable=request.POST['isenable'],
+                    note=request.POST['note'])
+                lesson.save()
+                return redirect('/adminlesson/')
+            else:
+                chapters = Chapter.objects.all()
+                accounts = Account.objects.all()
+                subjects = Subject.objects.all()
+                for chapter in chapters:
+                    chapter.createdate = chapter.createdate
+                    chapter.editdate = chapter.editdate
+
+                for account in accounts:
+                    account.createdate = account.createdate
+                    account.editdate = account.editdate
+
+                for subject in subjects:
+                    subject.createdate = subject.createdate
+                    subject.editdate = subject.editdate
+
+                context = {
+                    'chapter': chapter,
+                    'accounts': accounts,
+                    'subjects': subjects,
+                }
+
+            return render(request, 'adminlesson/lesson_create.html', context)
+        else:
+            return redirect('homepage:index')
     else:
-        chapters = Chapter.objects.all()
-        accounts = Account.objects.all()
-        subjects = Subject.objects.all()
-        for chapter in chapters:
-            chapter.createdate = chapter.createdate
-            chapter.editdate = chapter.editdate
-
-        for account in accounts:
-            account.createdate = account.createdate
-            account.editdate = account.editdate
-
-        for subject in subjects:
-            subject.createdate = subject.createdate
-            subject.editdate = subject.editdate
-
-        context = {
-            'chapter': chapter,
-            'accounts': accounts,
-            'subjects': subjects,
-        }
-
-    return render(request, 'adminlesson/lesson_create.html', context)
+        return redirect('homepage:index')
 
 
 def edit(request, id):
-    lesson = Lesson.objects.get(lessonid=id)
-    lesson.createdate = lesson.createdate
-    lesson.editdate = datetime.now()
+    if request.session.has_key('username'):
+        account = Account.objects.get(username = request.session['username'])
+        if account.accounttypeid.accounttypeid == 1:
+            lesson = Lesson.objects.get(lessonid=id)
+            lesson.createdate = lesson.createdate
+            lesson.editdate = datetime.now()
 
-    chapters = Chapter.objects.all()
-    accounts = Account.objects.all()
-    subjects = Subject.objects.all()
-    subjectid = lesson.chapterid.subjectid
-    for chapter in chapters:
-        chapter.createdate = chapter.createdate
-        chapter.editdate = chapter.editdate
+            chapters = Chapter.objects.all()
+            accounts = Account.objects.all()
+            subjects = Subject.objects.all()
+            subjectid = lesson.chapterid.subjectid
+            for chapter in chapters:
+                chapter.createdate = chapter.createdate
+                chapter.editdate = chapter.editdate
 
-    for account in accounts:
-        account.createdate = account.createdate
-        account.editdate = account.editdate
+            for account in accounts:
+                account.createdate = account.createdate
+                account.editdate = account.editdate
 
-    for subject in subjects:
-        subject.createdate = subject.createdate
-        subject.editdate = subject.editdate
+            for subject in subjects:
+                subject.createdate = subject.createdate
+                subject.editdate = subject.editdate
 
-    context = {'lesson': lesson,
-               'chapters': chapters,
-               'subjects': subjects,
-               'accounts': accounts,
-               'subjectid': subjectid,
-               }
-    return render(request, 'adminlesson/lesson_edit.html', context)
+            context = {'lesson': lesson,
+                    'chapters': chapters,
+                    'subjects': subjects,
+                    'accounts': accounts,
+                    'subjectid': subjectid,
+                    }
+            return render(request, 'adminlesson/lesson_edit.html', context)
+        else:
+            return redirect('homepage:index')
+    else:
+        return redirect('homepage:index')
 
 
 def getNum(x):
@@ -90,25 +110,39 @@ def getNum(x):
 
 
 def update(request, id):
-    lesson = Lesson.objects.filter(lessonid=id).update(accountid=Account.objects.get(accountid=getNum(request.POST['accountid'])))
-    lesson = Lesson.objects.filter(lessonid=id).update(chapterid=Chapter.objects.get(chapterid=getNum(request.POST['chapterid'])))
-    lesson = Lesson.objects.get(lessonid=id)
-    lesson.lessonname = request.POST['lessonname']
-    lesson.createdate = lesson.createdate
-    lesson.editdate = datetime.now()
-    lesson.description = request.POST['description']
-    lesson.content = request.POST['content']
-    lesson.order = request.POST['order']
-    lesson.isenable = request.POST['isenable']
-    lesson.note = request.POST['note']
-    lesson.save()
-    return redirect('/adminlesson/')
+    if request.session.has_key('username'):
+        account = Account.objects.get(username = request.session['username'])
+        if account.accounttypeid.accounttypeid == 1:
+            lesson = Lesson.objects.filter(lessonid=id).update(accountid=Account.objects.get(accountid=getNum(request.POST['accountid'])))
+            lesson = Lesson.objects.filter(lessonid=id).update(chapterid=Chapter.objects.get(chapterid=getNum(request.POST['chapterid'])))
+            lesson = Lesson.objects.get(lessonid=id)
+            lesson.lessonname = request.POST['lessonname']
+            lesson.createdate = lesson.createdate
+            lesson.editdate = datetime.now()
+            lesson.description = request.POST['description']
+            lesson.content = request.POST['content']
+            lesson.order = request.POST['order']
+            lesson.isenable = request.POST['isenable']
+            lesson.note = request.POST['note']
+            lesson.save()
+            return redirect('/adminlesson/')
+        else:
+            return redirect('homepage:index')
+    else:
+        return redirect('homepage:index')
 
 
 def delete(request, id):
-    lesson = Lesson.objects.get(lessonid=id)
-    lesson.delete()
-    return redirect('/adminlesson/')
+    if request.session.has_key('username'):
+        account = Account.objects.get(username = request.session['username'])
+        if account.accounttypeid.accounttypeid == 1:
+            lesson = Lesson.objects.get(lessonid=id)
+            lesson.delete()
+            return redirect('/adminlesson/')
+        else:
+            return redirect('homepage:index')
+    else:
+        return redirect('homepage:index')
 
 
 # lấy giá trị subject được nhập vào để giới hạn giá trị show ra của chapter

@@ -412,14 +412,14 @@ def getChapterLessson(subject, account):
                 checkpass="pointer-events:none"
         bfchap +=1
         lessons = Lesson.objects.filter(chapterid = chapter).order_by('order')
-        nameChap = 'Bài ' + str(chaporder) + ': ' + chapter.chaptername 
+        nameChap =  str(chaporder) + '. ' + chapter.chaptername 
         chaporder += 1
         # xử lý tên lesson
         lessorder = 1
         numChapid = chapter.chapterid
         chapter.chapterid = 'check' + '(' + str(chapter.chapterid) + ')' 
         for lesson in lessons:
-            lesson.lessonname = 'Chủ đề ' + str(lessorder) + ': ' + lesson.lessonname
+            lesson.lessonname = str(chaporder-1)+'. ' + str(lessorder) + '. ' + lesson.lessonname
             lessorder += 1
         temp = ChapAndLess(chapter.chapterid, nameChap, lessons, numChapid, checkpass)
         result.append(temp)
@@ -447,9 +447,9 @@ def getItemActivity(lesson):
     for item in items:
         activityorder = 1
         activities = Activity.objects.filter(itemid=item).order_by('order')
-        item.itemname = str(itemorder) +'/ '+item.itemname
+        item.itemname =item.itemname
         for activity in activities:
-            activity.activityname= 'Hoạt động '+ str(activityorder)+': '+ activity.activityname
+            activity.activityname=  str(activityorder)+'. '+ activity.activityname
             activityorder +=1
         temp=ItemAndActivity(item,activities)
         result.append(temp)
@@ -668,9 +668,60 @@ def getRank(level):
     name=''
     ava=''
     if rankc == 0:
-        name ='Coder Sơ Sinh'
-        ava='/media/rank1.jpg'
-        
+        name ='Nông Dân Sơ Cấp'
+        ava='/media/rank/chevron-0.png'
+    elif rankc == 1:
+        name = 'Nông Dân Trung Cấp'
+        ava='/media/rank/chevron-1.png'
+    elif rankc == 2:
+        name = 'Nông Dân Cao Cấp'
+        ava='/media/rank/chevron-2.png'
+    elif rankc == 3:
+        name = 'Binh sĩ Sơ Cấp'
+        ava='/media/rank/chevron-3.png'
+    elif rankc == 5:
+        name = 'Binh Sĩ Trung Cấp'
+        ava='/media/rank/chevron-4.png'
+    elif rankc == 7:
+        name = 'Binh Sĩ Cao Cấp'
+        ava='/media/rank/chevron-5.png'
+    elif rankc == 9:
+        name = 'Đặc Công Sơ Cấp'
+        ava='/media/rank/chevron-7.png'
+    elif rankc == 11:
+        name = 'Đặc Công Trung Cấp'
+        ava='/media/rank/chevron-8.png'
+    elif rankc == 13:
+        name = 'Đặc Công Cao Cấp'
+        ava='/media/rank/chevron-9.png'
+    elif rankc == 15:
+        name = 'Cấm Quân Sơ Cấp'
+        ava='/media/rank/chevron-13.png'
+    elif rankc == 17:
+        name = 'Cấm Quân Trung Cấp'
+        ava='/media/rank/chevron-14.png'
+    elif rankc == 19:
+        name = 'Cấm Quân Cao Cấp'
+        ava='/media/rank/chevron-15.png'
+    elif rankc == 21:
+        name = 'Hiệp Sĩ Hoàng Gia Sơ Cấp'
+        ava='/media/rank/chevron-16.png'
+    elif rankc == 24:
+        name = 'Hiệp Sĩ Hoàng Gia Trung Cấp'
+        ava='/media/rank/chevron-17.png'
+    elif rankc == 27:
+        name = 'Hiệp Sĩ Hoàng Gia Cao Cấp'
+        ava='/media/rank/chevron-18.png'
+    elif rankc == 30:
+        name = 'Hoàng Tộc Sơ Cấp'
+        ava='/media/rank/chevron-19.png'
+    elif rankc == 35:
+        name = 'Hoàng Tộc Cao Cấp'
+        ava='/media/rank/chevron-20.png'
+    elif rankc == 40:
+        name = 'Vua'
+        ava='/media/rank/chevron-21.png'
+
     return Rank(ava,name)
 
 # hàm ktra Khi Load có link act thuộc chương chưa mở khóa

@@ -6,140 +6,175 @@ from django.http import JsonResponse
 # Create your views here.
 
 def index(request):
-    competitionsubmittions = CompetitionSubmittion.objects.all()
-    for competitionsubmittion in competitionsubmittions:
-        competitionsubmittion.createdate = competitionsubmittion.createdate
-        competitionsubmittion.editdate = competitionsubmittion.editdate
-    context = {'competitionsubmittions': competitionsubmittions}
-    return render(request, 'admincompetitionsubmittion/competitionsubmittion_show.html', context)
+    if request.session.has_key('username'):
+        account = Account.objects.get(username = request.session['username'])
+        if account.accounttypeid.accounttypeid == 1:
+            competitionsubmittions = CompetitionSubmittion.objects.all()
+            for competitionsubmittion in competitionsubmittions:
+                competitionsubmittion.createdate = competitionsubmittion.createdate
+                competitionsubmittion.editdate = competitionsubmittion.editdate
+            context = {'competitionsubmittions': competitionsubmittions}
+            return render(request, 'admincompetitionsubmittion/competitionsubmittion_show.html', context)
+        else:
+            return redirect('homepage:index')
+    else:
+        return redirect('homepage:index')
 
 def create(request):
-    if request.method == 'POST':
-        try:
-            token_link = request.FILES['link']
-        except:
-            token_link = None
-        lin = ''
-        if token_link != None:
-            lin = tokenFile(token_link)
-        competitionsubmittion = CompetitionSubmittion( 
-                                accountid = Account.objects.get(accountid = request.POST['accountid']),
-                                # enviromentcateid = Account.objects.get(accountid = request.POST['enviromentcateid']),
-                                competitionid = Competition.objects.get(competitionid = request.POST['competitionid']),
-                                createdate= datetime.now(), 
-                                editdate= datetime.now(),
-                                link=lin,
-                                description=request.POST['description'],
-                                content=request.POST['content'],
-                                isenable=request.POST['isenable'],  
-                                note=request.POST['note'])
-        competitionsubmittion.save()
-        return redirect('/admincompetitionsubmittion/')
+    if request.session.has_key('username'):
+        account = Account.objects.get(username = request.session['username'])
+        if account.accounttypeid.accounttypeid == 1:
+            if request.method == 'POST':
+                try:
+                    token_link = request.FILES['link']
+                except:
+                    token_link = None
+                lin = ''
+                if token_link != None:
+                    lin = tokenFile(token_link)
+                competitionsubmittion = CompetitionSubmittion( 
+                                        accountid = Account.objects.get(accountid = request.POST['accountid']),
+                                        # enviromentcateid = Account.objects.get(accountid = request.POST['enviromentcateid']),
+                                        competitionid = Competition.objects.get(competitionid = request.POST['competitionid']),
+                                        createdate= datetime.now(), 
+                                        editdate= datetime.now(),
+                                        link=lin,
+                                        description=request.POST['description'],
+                                        content=request.POST['content'],
+                                        isenable=request.POST['isenable'],  
+                                        note=request.POST['note'])
+                competitionsubmittion.save()
+                return redirect('/admincompetitionsubmittion/')
+            else:
+                competitions = Competition.objects.all()
+                for competition in competitions:
+                    competition.createdate = competition.createdate
+                    competition.editdate = competition.editdate
+                    competition.opendate = competition.opendate.strftime("%Y-%m-%d %H:%M:%S")
+                    competition.enddate = competition.enddate.strftime("%Y-%m-%d %H:%M:%S")
+                
+                accounts = Account.objects.all()
+                # subjects = Subject.objects.all()
+                enviromentcates = EnviromentCate.objects.all()
+                for account in accounts:
+                    account.createdate = account.createdate
+                    account.editdate = account.editdate
+
+                # for subject in subjects:
+                #     subject.createdate = subject.createdate
+                #     subject.editdate = subject.editdate
+                
+                for enviromentcate in enviromentcates:
+                    enviromentcate.createdate = enviromentcate.createdate
+                    enviromentcate.editdate = enviromentcate.editdate
+
+                context = {
+                    'accounts': accounts,
+                    # 'subjects': subjects,
+                    'competitions': competitions,
+                    'enviromentcates': enviromentcates,
+                }
+            
+            return render(request, 'admincompetitionsubmittion/competitionsubmittion_create.html', context)
+        else:
+            return redirect('homepage:index')
     else:
-        competitions = Competition.objects.all()
-        for competition in competitions:
-            competition.createdate = competition.createdate
-            competition.editdate = competition.editdate
-            competition.opendate = competition.opendate.strftime("%Y-%m-%d %H:%M:%S")
-            competition.enddate = competition.enddate.strftime("%Y-%m-%d %H:%M:%S")
-        
-        accounts = Account.objects.all()
-        # subjects = Subject.objects.all()
-        enviromentcates = EnviromentCate.objects.all()
-        for account in accounts:
-            account.createdate = account.createdate
-            account.editdate = account.editdate
-
-        # for subject in subjects:
-        #     subject.createdate = subject.createdate
-        #     subject.editdate = subject.editdate
-        
-        for enviromentcate in enviromentcates:
-            enviromentcate.createdate = enviromentcate.createdate
-            enviromentcate.editdate = enviromentcate.editdate
-
-        context = {
-            'accounts': accounts,
-            # 'subjects': subjects,
-            'competitions': competitions,
-            'enviromentcates': enviromentcates,
-        }
-       
-    return render(request, 'admincompetitionsubmittion/competitionsubmittion_create.html', context)
+        return redirect('homepage:index')
 
 def edit(request, id):
-    competitionsubmittion = CompetitionSubmittion.objects.get(competitionsubmittionid=id)
-    competitionsubmittion.createdate = competitionsubmittion.createdate
-    competitionsubmittion.editdate = datetime.now()
+    if request.session.has_key('username'):
+        account = Account.objects.get(username = request.session['username'])
+        if account.accounttypeid.accounttypeid == 1:
+            competitionsubmittion = CompetitionSubmittion.objects.get(competitionsubmittionid=id)
+            competitionsubmittion.createdate = competitionsubmittion.createdate
+            competitionsubmittion.editdate = datetime.now()
 
 
-    competitions = Competition.objects.all()
-    for competition in competitions:
-        competition.createdate = competition.createdate
-        competition.editdate = competition.editdate
-        competition.opendate = competition.opendate.strftime("%Y-%m-%d %H:%M:%S")
-        competition.enddate = competition.enddate.strftime("%Y-%m-%d %H:%M:%S")
-    
-    accounts = Account.objects.all()
-    # subjects = Subject.objects.all()
-    enviromentcates = EnviromentCate.objects.all()
+            competitions = Competition.objects.all()
+            for competition in competitions:
+                competition.createdate = competition.createdate
+                competition.editdate = competition.editdate
+                competition.opendate = competition.opendate.strftime("%Y-%m-%d %H:%M:%S")
+                competition.enddate = competition.enddate.strftime("%Y-%m-%d %H:%M:%S")
+            
+            accounts = Account.objects.all()
+            # subjects = Subject.objects.all()
+            enviromentcates = EnviromentCate.objects.all()
 
-    for account in accounts:
-        account.createdate = account.createdate
-        account.editdate = account.editdate
+            for account in accounts:
+                account.createdate = account.createdate
+                account.editdate = account.editdate
 
-    # for subject in subjects:
-    #     subject.createdate = subject.createdate
-    #     subject.editdate = subject.editdate
-    
-    for enviromentcate in enviromentcates:
-        enviromentcate.createdate = enviromentcate.createdate
-        enviromentcate.editdate = enviromentcate.editdate
+            # for subject in subjects:
+            #     subject.createdate = subject.createdate
+            #     subject.editdate = subject.editdate
+            
+            for enviromentcate in enviromentcates:
+                enviromentcate.createdate = enviromentcate.createdate
+                enviromentcate.editdate = enviromentcate.editdate
+                
+            context = {
+                'accounts': accounts,
+                # 'subjects': subjects,
+                'competitionsubmittion': competitionsubmittion,
+                'competitions': competitions,
+                'enviromentcates': enviromentcates,
+            }
         
-    context = {
-        'accounts': accounts,
-        # 'subjects': subjects,
-        'competitionsubmittion': competitionsubmittion,
-        'competitions': competitions,
-        'enviromentcates': enviromentcates,
-    }
-   
-    return render(request, 'admincompetitionsubmittion/competitionsubmittion_edit.html', context)
+            return render(request, 'admincompetitionsubmittion/competitionsubmittion_edit.html', context)
+        else:
+            return redirect('homepage:index')
+    else:
+        return redirect('homepage:index')
 
 def getNum(x):
     return int(''.join(ele for ele in x if ele.isdigit()))
 
 def update(request, id):
-    competitionsubmittion = CompetitionSubmittion.objects.filter(competitionsubmittionid = id).update(accountid = Account.objects.get(accountid = getNum(request.POST['accountid'])))
-    # competitionsubmittion = CompetitionSubmittion.objects.filter(competitionsubmittionid = id).update(enviromentcateid = EnviromentCate.objects.get(enviromentcateid = getNum(request.POST['enviromentcateid'])))
-    competitionsubmittion = CompetitionSubmittion.objects.filter(competitionsubmittionid = id).update(competitionid = Competition.objects.get(competitionid = getNum(request.POST['competitionid'])))
-    competitionsubmittion = CompetitionSubmittion.objects.get(competitionsubmittionid=id)
+    if request.session.has_key('username'):
+        account = Account.objects.get(username = request.session['username'])
+        if account.accounttypeid.accounttypeid == 1:
+            competitionsubmittion = CompetitionSubmittion.objects.filter(competitionsubmittionid = id).update(accountid = Account.objects.get(accountid = getNum(request.POST['accountid'])))
+            # competitionsubmittion = CompetitionSubmittion.objects.filter(competitionsubmittionid = id).update(enviromentcateid = EnviromentCate.objects.get(enviromentcateid = getNum(request.POST['enviromentcateid'])))
+            competitionsubmittion = CompetitionSubmittion.objects.filter(competitionsubmittionid = id).update(competitionid = Competition.objects.get(competitionid = getNum(request.POST['competitionid'])))
+            competitionsubmittion = CompetitionSubmittion.objects.get(competitionsubmittionid=id)
 
-    try:
-        token_link = request.FILES['link']
-    except:
-        token_link = None
-    lin = ''
-    if token_link != None:
-        lin = tokenFile(token_link)
+            try:
+                token_link = request.FILES['link']
+            except:
+                token_link = None
+            lin = ''
+            if token_link != None:
+                lin = tokenFile(token_link)
+            else:
+                lin = competitionsubmittion.link
+
+            competitionsubmittion.createdate=competitionsubmittion.createdate
+            competitionsubmittion.editdate=datetime.now()
+            competitionsubmittion.link=lin
+            competitionsubmittion.description=request.POST['description']
+            competitionsubmittion.content=request.POST['content']
+            competitionsubmittion.isenable=request.POST['isenable']
+            competitionsubmittion.note=request.POST['note']
+            competitionsubmittion.save()
+            return redirect('/admincompetitionsubmittion/')
+        else:
+            return redirect('homepage:index')
     else:
-        lin = competitionsubmittion.link
-
-    competitionsubmittion.createdate=competitionsubmittion.createdate
-    competitionsubmittion.editdate=datetime.now()
-    competitionsubmittion.link=lin
-    competitionsubmittion.description=request.POST['description']
-    competitionsubmittion.content=request.POST['content']
-    competitionsubmittion.isenable=request.POST['isenable']
-    competitionsubmittion.note=request.POST['note']
-    competitionsubmittion.save()
-    return redirect('/admincompetitionsubmittion/')
+        return redirect('homepage:index')
 
 
 def delete(request, id):
-    competitionsubmittion = CompetitionSubmittion.objects.get(competitionsubmittionid= id)
-    competitionsubmittion.delete()
-    return redirect('/admincompetitionsubmittion/')
+    if request.session.has_key('username'):
+        account = Account.objects.get(username = request.session['username'])
+        if account.accounttypeid.accounttypeid == 1:
+            competitionsubmittion = CompetitionSubmittion.objects.get(competitionsubmittionid= id)
+            competitionsubmittion.delete()
+            return redirect('/admincompetitionsubmittion/')
+        else:
+            return redirect('homepage:index')
+    else:
+        return redirect('homepage:index')
 
 
 # def validate_subjectcompetitionsubmittion(request):

@@ -6,130 +6,165 @@ from django.http import JsonResponse
 # Create your views here.
 
 def index(request):
-    games = Game.objects.all()
-    for game in games:
-        game.createdate = game.createdate
-        game.editdate = game.editdate
-    context = {'games': games}
-    return render(request, 'admingame/game_show.html', context)
+    if request.session.has_key('username'):
+        account = Account.objects.get(username = request.session['username'])
+        if account.accounttypeid.accounttypeid == 1:
+            games = Game.objects.all()
+            for game in games:
+                game.createdate = game.createdate
+                game.editdate = game.editdate
+            context = {'games': games}
+            return render(request, 'admingame/game_show.html', context)
+        else:
+            return redirect('homepage:index')
+    else:
+        return redirect('homepage:index')
 
 def create(request):
-    if request.method == 'POST':
-        try:
-            token_avatar = request.FILES['avatar']
-        except:
-            token_avatar = None
-        ava = ''
-        if token_avatar != None:
-            ava = tokenFile(token_avatar)
-        game = Game( 
-                                accountid = Account.objects.get(accountid = request.POST['accountid']),
-                                subjectid = Subject.objects.get(subjectid = request.POST['subjectid']),
-                                gametypeid = GameType.objects.get(gametypeid = request.POST['gametypeid']),
-                                gamename=request.POST['gamename'], 
-                                createdate= datetime.now(), 
-                                editdate= datetime.now(),
-                                viewcount = request.POST['viewcount'],
-                                description=request.POST['description'],
-                                content=request.POST['content'],
-                                avatar=ava,
-                                link=request.POST['link'])
-                                
-        game.save()
-        return redirect('/admingame/')
+    if request.session.has_key('username'):
+        account = Account.objects.get(username = request.session['username'])
+        if account.accounttypeid.accounttypeid == 1:
+            if request.method == 'POST':
+                try:
+                    token_avatar = request.FILES['avatar']
+                except:
+                    token_avatar = None
+                ava = ''
+                if token_avatar != None:
+                    ava = tokenFile(token_avatar)
+                game = Game( 
+                                        accountid = Account.objects.get(accountid = request.POST['accountid']),
+                                        subjectid = Subject.objects.get(subjectid = request.POST['subjectid']),
+                                        gametypeid = GameType.objects.get(gametypeid = request.POST['gametypeid']),
+                                        gamename=request.POST['gamename'], 
+                                        createdate= datetime.now(), 
+                                        editdate= datetime.now(),
+                                        viewcount = request.POST['viewcount'],
+                                        description=request.POST['description'],
+                                        content=request.POST['content'],
+                                        avatar=ava,
+                                        link=request.POST['link'])
+                                        
+                game.save()
+                return redirect('/admingame/')
+            else:
+                games = Game.objects.all()
+                for game in games:
+                    game.createdate = game.createdate
+                    game.editdate = game.editdate
+                
+                accounts = Account.objects.all()
+                for account in accounts:
+                    account.createdate = account.createdate
+                    account.editdate = account.editdate
+                
+                subjects = Subject.objects.all()
+                for subject in subjects:
+                    subject.createdate = subject.createdate
+                    subject.editdate = subject.editdate
+                
+                gametypes = GameType.objects.all()
+                for gametype in gametypes:
+                    gametype.createdate = gametype.createdate
+                    gametype.editdate = gametype.editdate
+                context = {
+                    'games': games,
+                    'gametypes': gametypes,
+                    'accounts': accounts,
+                    'subjects': subjects,
+                }
+            return render(request, 'admingame/game_create.html', context)
+        else:
+            return redirect('homepage:index')
     else:
-        games = Game.objects.all()
-        for game in games:
-            game.createdate = game.createdate
-            game.editdate = game.editdate
-        
-        accounts = Account.objects.all()
-        for account in accounts:
-            account.createdate = account.createdate
-            account.editdate = account.editdate
-        
-        subjects = Subject.objects.all()
-        for subject in subjects:
-            subject.createdate = subject.createdate
-            subject.editdate = subject.editdate
-        
-        gametypes = GameType.objects.all()
-        for gametype in gametypes:
-            gametype.createdate = gametype.createdate
-            gametype.editdate = gametype.editdate
-        context = {
-            'games': games,
-            'gametypes': gametypes,
-            'accounts': accounts,
-            'subjects': subjects,
-        }
-    return render(request, 'admingame/game_create.html', context)
+        return redirect('homepage:index')
 
 def edit(request, id):
-    game = Game.objects.get(gameid=id)
-    game.createdate = game.createdate
-    game.editdate = datetime.now()
-    
-    gametypes = GameType.objects.all()
-    for gametype in gametypes:
-        gametype.createdate = gametype.createdate
-        gametype.editdate = gametype.editdate
+    if request.session.has_key('username'):
+        account = Account.objects.get(username = request.session['username'])
+        if account.accounttypeid.accounttypeid == 1:
+            game = Game.objects.get(gameid=id)
+            game.createdate = game.createdate
+            game.editdate = datetime.now()
+            
+            gametypes = GameType.objects.all()
+            for gametype in gametypes:
+                gametype.createdate = gametype.createdate
+                gametype.editdate = gametype.editdate
 
-    accounts = Account.objects.all()
-    for account in accounts:
-        account.createdate = account.createdate
-        account.editdate = account.editdate
-        
-    subjects = Subject.objects.all()
-    for subject in subjects:
-        subject.createdate = subject.createdate
-        subject.editdate = subject.editdate
+            accounts = Account.objects.all()
+            for account in accounts:
+                account.createdate = account.createdate
+                account.editdate = account.editdate
+                
+            subjects = Subject.objects.all()
+            for subject in subjects:
+                subject.createdate = subject.createdate
+                subject.editdate = subject.editdate
 
-    context = {
-        'game': game,
-        'gametypes': gametypes,
-        'subjects': subjects,
-        'accounts': accounts,
-    }
-    return render(request, 'admingame/game_edit.html', context)
+            context = {
+                'game': game,
+                'gametypes': gametypes,
+                'subjects': subjects,
+                'accounts': accounts,
+            }
+            return render(request, 'admingame/game_edit.html', context)
+        else:
+            return redirect('homepage:index')
+    else:
+        return redirect('homepage:index')
 
-def getNum(x):
+def getNumber(x):
     return int(''.join(ele for ele in x if ele.isdigit()))
 
 def update(request, id):
-    game = Game.objects.get(gameid=id)
-    try:
-        token_avatar = request.FILES['avatar']
-    except:
-        token_avatar = None
-    ava = ''
-    if token_avatar != None:
-        ava = tokenFile(token_avatar)
-    else:
-        ava = game.avatar
+    if request.session.has_key('username'):
+        account = Account.objects.get(username = request.session['username'])
+        if account.accounttypeid.accounttypeid == 1:
+            game = Game.objects.get(gameid=id)
+            try:
+                token_avatar = request.FILES['avatar']
+            except:
+                token_avatar = None
+            ava = ''
+            if token_avatar != None:
+                ava = tokenFile(token_avatar)
+            else:
+                ava = game.avatar
 
-    game.link = game.link
-    
-    game = Game.objects.filter(gameid = id).update(accountid = Account.objects.get(accountid = getNum(request.POST['accountid'])))
-    game = Game.objects.filter(gameid = id).update(subjectid = Subject.objects.get(subjectid = getNum(request.POST['subjectid'])))
-    game = Game.objects.filter(gameid = id).update(gametypeid = GameType.objects.get(gametypeid = getNum(request.POST['gametypeid'])))
-    game = Game.objects.get(gameid=id)
-    game.gamename=request.POST['gamename']
-    game.createdate=game.createdate
-    game.editdate=datetime.now()
-    game.viewcount = request.POST['viewcount']
-    game.description=request.POST['description']
-    game.content=request.POST['content']
-    game.avatar=ava
-    game.link=request.POST['link']
-    game.save()
-    return redirect('/admingame/')
+            game.link = game.link
+            
+            game = Game.objects.filter(gameid = id).update(accountid = Account.objects.get(accountid = getNumber(request.POST['accountid'])))
+            game = Game.objects.filter(gameid = id).update(subjectid = Subject.objects.get(subjectid = getNumber(request.POST['subjectid'])))
+            game = Game.objects.filter(gameid = id).update(gametypeid = GameType.objects.get(gametypeid = getNumber(request.POST['gametypeid'])))
+            game = Game.objects.get(gameid=id)
+            game.gamename=request.POST['gamename']
+            game.createdate=game.createdate
+            game.editdate=datetime.now()
+            game.viewcount = request.POST['viewcount']
+            game.description=request.POST['description']
+            game.content=request.POST['content']
+            game.avatar=ava
+            game.link=request.POST['link']
+            game.save()
+            return redirect('/admingame/')
+        else:
+            return redirect('homepage:index')
+    else:
+        return redirect('homepage:index')
 
 
 def delete(request, id):
-    game = Game.objects.get(gameid= id)
-    game.delete()
-    return redirect('/admingame/')
+    if request.session.has_key('username'):
+        account = Account.objects.get(username = request.session['username'])
+        if account.accounttypeid.accounttypeid == 1:
+            game = Game.objects.get(gameid= id)
+            game.delete()
+            return redirect('/admingame/')
+        else:
+            return redirect('homepage:index')
+    else:
+        return redirect('homepage:index')
 
 
 # #lấy giá trị subject được nhập vào để giới hạn giá trị show ra của chapter

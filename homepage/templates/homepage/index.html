@@ -282,7 +282,7 @@
 				</div>
 				<!--gallery end here-->
 				<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.css">
-				<script src="https://cdnjs.cloudflare.com/ajax/libs/nivo-lightbox/1.3.1/nivo-lightbox.min.js"></script>
+				
 				{% comment %} <script type="text/javascript">
 					$(document).ready(function(){
 						$('#nivo-lightbox-demo').nivoLightbox({ effect: 'fade' });
@@ -366,38 +366,42 @@
 	</div>
 	<!-- /container -->
 </div>
-<div id="live-chat" style="background-color: #33ddff">
+<div id="live-chat" style="background-color: #33ddff;z-index: 10">
 		
 		<section id="chatheader" class="clearfix" style="    background: #293239;border-radius: 5px 5px 0 0;color: #fff;cursor: pointer;padding: 16px 24px;">
 			
 			
 
 			<h4 style="color:white">VS-PRO</h4>
-
-			<span class="chat-message-counter">3</span>
+			<input id='lastid' style="color:black;display:none" type="number" value=0 >
+			<span id='countmes' class="chat-message-counter">3</span>
 
 		</section>
 		<div class="chat">
 			
-			<div class="chat-history">
+			<div class="chat-history" id='chathis'>
 				
 				<div class="chat-message clearfix">
 					
-					<img src="http://lorempixum.com/32/32/people" alt="" width="32" height="32">
+					<img src="https://cdnmedia.baotintuc.vn/2014/12/04/12/13/avatar.jpg" alt="" width="32" height="32">
 
 					<div class="chat-message-content clearfix">
 						
 						<span class="chat-time">13:35</span>
 
-						<h5><p>Chào bạn!</p></h5>
-
+						
+						<strong>nosss</strong>
 						<p>Chúng tôi có thể giúp gì được cho bạn!</p>
 
-					</div> <!-- end chat-message-content -->
+					</div> 
+					<hr>
+				</div>
+				
 
-				</div> <!-- end chat-message -->
+				
+				 <!-- end chat-message -->
 
-				<hr>
+				
 
 				
 
@@ -408,9 +412,13 @@
 			<div style="padding:24px">
 
 				<fieldset>
+					<div style="width:100%" >
+						<input style="width:75%" id="inputchat" type="text" placeholder="Nhập tin nhắn..." autofocus>
+						<button id='btnsendmes' class="buttonsend" style="width:15%;background:white ;border-radius: 10%">
+							<i class="fa fa-fighter-jet"></i>
+						</button>
+					</div>
 					
-					<input id="inputchat" type="text" placeholder="Nhập tin nhắn..." autofocus>
-					<input type="hidden">
 
 				</fieldset>
 
@@ -421,10 +429,87 @@
 	</div>
 	<script>
 	$("#inputchat").on('keyup', function (e) {
-    if (e.keyCode == 13) {
-        alert("1h tiếp ")
-    }
+			if (e.keyCode == 13) {
+				var content=$("#inputchat").val();
+
+				if (content != "")
+				{
+					$.ajax({
+					url: '/ajax/ajaxsentmes/',
+					data: {
+						'content': content,
+					},
+					dataType: 'json',
+					success: function (data) {
+						$("#inputchat").val('');
+						$('#chathis').animate({
+						scrollTop: $('#chathis').get(0).scrollHeight
+					}, 2000);
+					}
+					});
+
+				}
+			}
 		});
+		$('#btnsendmes').click(function(){
+			var content=$("#inputchat").val();
+
+			if (content != "")
+			{
+				$.ajax({
+				url: '/ajax/ajaxsentmes/',
+				data: {
+					'content': content,
+				},
+				dataType: 'json',
+				success: function (data) {
+					$("#inputchat").val('');
+					$('#chathis').animate({
+					scrollTop: $('#chathis').get(0).scrollHeight
+				}, 2000);
+				}
+				});
+
+			}
+		});
+		$(document).ready(function()
+		{
+			$.ajax({
+					url: '/ajax/getallmes/',
+					data: {
+						
+					},
+					dataType: 'json',
+					success: function (data) {
+						if(data.flag){
+							var temp= $('#chathis').html() + data.s;
+							$('#chathis').html(temp);
+							$('#lastid').val(parseInt(data.lastid));
+						}
+					}
+					});
+					setInterval(getchat,2000);
+
+		})
+		
+		function getchat(){
+			lastid=$('#lastid').val();
+			$.ajax({
+					url: '/ajax/getmes/',
+					data: {
+						'lastid':lastid
+					},
+					dataType: 'json',
+					success: function (data) {
+						var temp= $('#chathis').html() + data.s;
+							$('#chathis').html(temp);
+							$('#lastid').val(data.lastid);
+							$('#countmes').html(data.count);
+								
+							
+					}
+					});
+		}
 	</script>
 <!-- /bg_color_1 -->
 

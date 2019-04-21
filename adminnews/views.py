@@ -2,143 +2,179 @@ from django.shortcuts import render, redirect
 from homepage.models import News, EnviromentCate, Account, Subject
 from datetime import datetime
 from django.http import JsonResponse
+from homepage.myfunction import tokenFile
 # Create your views here.
 
 def index(request):
-    newss = News.objects.all()
-    for news in newss:
-        news.createdate = news.createdate
-        news.editdate = news.editdate
-    context = {'newss': newss}
-    return render(request, 'adminnews/news_show.html', context)
-
-def create(request):
-    if request.method == 'POST':
-        # Lấy url của avatar
-        try:
-            token_avatar = request.FILES['avatar']
-        except:
-            token_avatar = None
-        ava = ''
-        if token_avatar != None:
-            ava = tokenFile(token_avatar)
-        
-
-        news = News( 
-                                accountid = Account.objects.get(accountid = request.POST['accountid']),
-                                enviromentcateid = EnviromentCate.objects.get(enviromentcateid = request.POST['enviromentcateid']),
-                                newsname=request.POST['newsname'], 
-                                createdate= datetime.now(), 
-                                editdate= datetime.now(),
-                                description=request.POST['description'],
-                                content=request.POST['content'],
-                                avatar=ava,
-                                isenable=request.POST['isenable'],  
-                                note=request.POST['note'])
-        news.save()
-        return redirect('/adminnews/')
+    if request.session.has_key('username'):
+        account = Account.objects.get(username = request.session['username'])
+        if account.accounttypeid.accounttypeid == 1:
+            newss = News.objects.all()
+            for news in newss:
+                news.createdate = news.createdate
+                news.editdate = news.editdate
+            context = {'newss': newss}
+            return render(request, 'adminnews/news_show.html', context)
+        else:
+            return redirect('homepage:index')
     else:
-        # subjectparts = SubjectPart.objects.all()
-        # for subjectpart in subjectparts:
-        #     subjectpart.createdate = subjectpart.createdate
-        #     subjectpart.editdate = subjectpart.editdate
-
-        enviromentcates = EnviromentCate.objects.all()
-        for enviromentcate in enviromentcates:
-            enviromentcate.createdate = enviromentcate.createdate
-            enviromentcate.editdate = enviromentcate.editdate
+        return redirect('homepage:index')
         
-        accounts = Account.objects.all()
-        subjects = Subject.objects.all()
-        
-        for account in accounts:
-            account.createdate = account.createdate
-            account.editdate = account.editdate
+def create(request):
+    if request.session.has_key('username'):
+        account = Account.objects.get(username = request.session['username'])
+        if account.accounttypeid.accounttypeid == 1:
+            if request.method == 'POST':
+                # Lấy url của avatar
+                try:
+                    token_avatar = request.FILES['avatar']
+                except:
+                    token_avatar = None
+                ava = ''
+                if token_avatar != None:
+                    ava = tokenFile(token_avatar)
+                
 
-        for subject in subjects:
-            subject.createdate = subject.createdate
-            subject.editdate = subject.editdate
+                news = News( 
+                                        accountid = Account.objects.get(accountid = request.POST['accountid']),
+                                        enviromentcateid = EnviromentCate.objects.get(enviromentcateid = request.POST['enviromentcateid']),
+                                        newsname=request.POST['newsname'], 
+                                        createdate= datetime.now(), 
+                                        editdate= datetime.now(),
+                                        description=request.POST['description'],
+                                        content=request.POST['content'],
+                                        avatar=ava,
+                                        isenable=request.POST['isenable'],  
+                                        note=request.POST['note'])
+                news.save()
+                return redirect('/adminnews/')
+            else:
+                # subjectparts = SubjectPart.objects.all()
+                # for subjectpart in subjectparts:
+                #     subjectpart.createdate = subjectpart.createdate
+                #     subjectpart.editdate = subjectpart.editdate
 
-        context = {
-            'accounts': accounts,
-            'subjects': subjects,
-            # 'subjectparts': subjectparts,
-            'enviromentcates': enviromentcates,
-        }   
-       
-    return render(request, 'adminnews/news_create.html', context)
+                enviromentcates = EnviromentCate.objects.all()
+                for enviromentcate in enviromentcates:
+                    enviromentcate.createdate = enviromentcate.createdate
+                    enviromentcate.editdate = enviromentcate.editdate
+                
+                accounts = Account.objects.all()
+                subjects = Subject.objects.all()
+                
+                for account in accounts:
+                    account.createdate = account.createdate
+                    account.editdate = account.editdate
+
+                for subject in subjects:
+                    subject.createdate = subject.createdate
+                    subject.editdate = subject.editdate
+
+                context = {
+                    'accounts': accounts,
+                    'subjects': subjects,
+                    # 'subjectparts': subjectparts,
+                    'enviromentcates': enviromentcates,
+                }   
+            
+            return render(request, 'adminnews/news_create.html', context)
+        else:
+            return redirect('homepage:index')
+    else:
+        return redirect('homepage:index')
 
 def edit(request, id):
-    news = News.objects.get(newsid=id)
-    news.createdate = news.createdate
-    news.editdate = datetime.now()
+    if request.session.has_key('username'):
+        account = Account.objects.get(username = request.session['username'])
+        if account.accounttypeid.accounttypeid == 1:
+            news = News.objects.get(newsid=id)
+            news.createdate = news.createdate
+            news.editdate = datetime.now()
 
-    # subjectparts = SubjectPart.objects.all()
-    # for subjectpart in subjectparts:
-    #     subjectpart.createdate = subjectpart.createdate
-    #     subjectpart.editdate = subjectpart.editdate
+            # subjectparts = SubjectPart.objects.all()
+            # for subjectpart in subjectparts:
+            #     subjectpart.createdate = subjectpart.createdate
+            #     subjectpart.editdate = subjectpart.editdate
 
-    enviromentcates = EnviromentCate.objects.all()
-    for enviromentcate in enviromentcates:
-        enviromentcate.createdate = enviromentcate.createdate
-        enviromentcate.editdate = enviromentcate.editdate
+            enviromentcates = EnviromentCate.objects.all()
+            for enviromentcate in enviromentcates:
+                enviromentcate.createdate = enviromentcate.createdate
+                enviromentcate.editdate = enviromentcate.editdate
 
-    accounts = Account.objects.all()
-    subjects = Subject.objects.all()
+            accounts = Account.objects.all()
+            subjects = Subject.objects.all()
+                
+            for account in accounts:
+                account.createdate = account.createdate
+                account.editdate = account.editdate
+
+            for subject in subjects:
+                subject.createdate = subject.createdate
+                subject.editdate = subject.editdate
+
+            context = {
+                'accounts': accounts,
+                'subjects': subjects,
+                'news': news,
+                # 'subjectparts': subjectparts,
+                'enviromentcates': enviromentcates,
+            }
         
-    for account in accounts:
-        account.createdate = account.createdate
-        account.editdate = account.editdate
-
-    for subject in subjects:
-        subject.createdate = subject.createdate
-        subject.editdate = subject.editdate
-
-    context = {
-        'accounts': accounts,
-        'subjects': subjects,
-        'news': news,
-        # 'subjectparts': subjectparts,
-        'enviromentcates': enviromentcates,
-    }
-   
-    return render(request, 'adminnews/news_edit.html', context)
+            return render(request, 'adminnews/news_edit.html', context)
+        else:
+            return redirect('homepage:index')
+    else:
+        return redirect('homepage:index')
 
 def getNum(x):
     return int(''.join(ele for ele in x if ele.isdigit()))
 
 def update(request, id):
-    news = News.objects.filter(newsid = id).update(accountid = Account.objects.get(accountid = getNum(request.POST['accountid'])))
-    news = News.objects.filter(newsid = id).update(enviromentcateid = EnviromentCate.objects.get(enviromentcateid = getNum(request.POST['enviromentcateid'])))
-    news = News.objects.get(newsid=id)
+    if request.session.has_key('username'):
+        account = Account.objects.get(username = request.session['username'])
+        if account.accounttypeid.accounttypeid == 1:
+            news = News.objects.filter(newsid = id).update(accountid = Account.objects.get(accountid = getNum(request.POST['accountid'])))
+            news = News.objects.filter(newsid = id).update(enviromentcateid = EnviromentCate.objects.get(enviromentcateid = getNum(request.POST['enviromentcateid'])))
+            news = News.objects.get(newsid=id)
 
-    # Lấy url của avatar
-    try:
-        token_avatar = request.FILES['avatar']
-    except:
-        token_avatar = None
-    ava = ''
-    if token_avatar != None:
-        ava = tokenFile(token_avatar)
+            # Lấy url của avatar
+            try:
+                token_avatar = request.FILES['avatar']
+            except:
+                token_avatar = None
+            ava = ''
+            if token_avatar != None:
+                ava = tokenFile(token_avatar)
+            else:
+                ava = news.avatar
+
+            news.newsname=request.POST['newsname']
+            news.createdate=news.createdate
+            news.editdate=datetime.now()
+            news.isenable=ava
+            news.description=request.POST['description']
+            news.content=request.POST['content']
+            news.isenable=request.POST['isenable']
+            news.note=request.POST['note']
+            news.save()
+            return redirect('/adminnews/')
+        else:
+            return redirect('homepage:index')
     else:
-        ava = news.avatar
-
-    news.newsname=request.POST['newsname']
-    news.createdate=news.createdate
-    news.editdate=datetime.now()
-    news.isenable=ava
-    news.description=request.POST['description']
-    news.content=request.POST['content']
-    news.isenable=request.POST['isenable']
-    news.note=request.POST['note']
-    news.save()
-    return redirect('/adminnews/')
+        return redirect('homepage:index')
 
 
 def delete(request, id):
-    news = News.objects.get(newsid= id)
-    news.delete()
-    return redirect('/adminnews/')
+    if request.session.has_key('username'):
+        account = Account.objects.get(username = request.session['username'])
+        if account.accounttypeid.accounttypeid == 1:
+            news = News.objects.get(newsid= id)
+            news.delete()
+            return redirect('/adminnews/')
+        else:
+            return redirect('homepage:index')
+    else:
+        return redirect('homepage:index')
 
 
 #lấy giá trị subject được nhập vào để giới hạn giá trị show ra của subjectpart

@@ -6,89 +6,124 @@ from django.http import JsonResponse
 # Create your views here.
 
 def index(request):
-    competitionsubmittionlikes = CompetitionSubmittionLike.objects.all()
-    
-    context = {'competitionsubmittionlikes': competitionsubmittionlikes }
-    return render(request, 'admincompetitionsubmittionlike/competitionsubmittionlike_show.html', context)
+    if request.session.has_key('username'):
+        account = Account.objects.get(username = request.session['username'])
+        if account.accounttypeid.accounttypeid == 1:
+            competitionsubmittionlikes = CompetitionSubmittionLike.objects.all()
+            
+            context = {'competitionsubmittionlikes': competitionsubmittionlikes }
+            return render(request, 'admincompetitionsubmittionlike/competitionsubmittionlike_show.html', context)
+        else:
+            return redirect('homepage:index')
+    else:
+        return redirect('homepage:index')
 
 def create(request):
-    if request.method == 'POST':
-        competitionsubmittionlike = CompetitionSubmittionLike( 
-                                accountid = Account.objects.get(accountid = request.POST['accountid']),
-                                competitionsubmittionid = CompetitionSubmittion.objects.get(competitionsubmittionid = request.POST['competitionsubmittionid']),
-                                status=request.POST['status'],
-                                isenable=request.POST['isenable'],  
-                                note=request.POST['note'])
-        competitionsubmittionlike.save()
-        return redirect('/admincompetitionsubmittionlike/')
-    else:
-        competitionsubmittions = CompetitionSubmittion.objects.all()
-        for competitionsubmittion in competitionsubmittions:
-            competitionsubmittion.createdate = competitionsubmittion.createdate
-            competitionsubmittion.editdate = competitionsubmittion.editdate
-        
-        accounts = Account.objects.all()
-        for account in accounts:
-            account.createdate = account.createdate
-            account.editdate = account.editdate
-        
-        competitions = Competition.objects.all()
-        for competition in competitions:
-            competition.createdate = competition.createdate
-            competition.editdate = competition.editdate
+    if request.session.has_key('username'):
+        account = Account.objects.get(username = request.session['username'])
+        if account.accounttypeid.accounttypeid == 1:
+            if request.method == 'POST':
+                competitionsubmittionlike = CompetitionSubmittionLike( 
+                                        accountid = Account.objects.get(accountid = request.POST['accountid']),
+                                        competitionsubmittionid = CompetitionSubmittion.objects.get(competitionsubmittionid = request.POST['competitionsubmittionid']),
+                                        status=request.POST['status'],
+                                        isenable=request.POST['isenable'],  
+                                        note=request.POST['note'])
+                competitionsubmittionlike.save()
+                return redirect('/admincompetitionsubmittionlike/')
+            else:
+                competitionsubmittions = CompetitionSubmittion.objects.all()
+                for competitionsubmittion in competitionsubmittions:
+                    competitionsubmittion.createdate = competitionsubmittion.createdate
+                    competitionsubmittion.editdate = competitionsubmittion.editdate
+                
+                accounts = Account.objects.all()
+                for account in accounts:
+                    account.createdate = account.createdate
+                    account.editdate = account.editdate
+                
+                competitions = Competition.objects.all()
+                for competition in competitions:
+                    competition.createdate = competition.createdate
+                    competition.editdate = competition.editdate
 
-        context = {
-            'competitionsubmittions': competitionsubmittions,
-            'accounts': accounts,
-            'competitions': competitions,
-        }
-    return render(request, 'admincompetitionsubmittionlike/competitionsubmittionlike_create.html', context)
+                context = {
+                    'competitionsubmittions': competitionsubmittions,
+                    'accounts': accounts,
+                    'competitions': competitions,
+                }
+            return render(request, 'admincompetitionsubmittionlike/competitionsubmittionlike_create.html', context)
+        else:
+            return redirect('homepage:index')
+    else:
+        return redirect('homepage:index')
 
 def edit(request, id):
-    competitionsubmittionlike = CompetitionSubmittionLike.objects.get(competitionsubmittionlikeid=id)
-    
+    if request.session.has_key('username'):
+        account = Account.objects.get(username = request.session['username'])
+        if account.accounttypeid.accounttypeid == 1:
+            competitionsubmittionlike = CompetitionSubmittionLike.objects.get(competitionsubmittionlikeid=id)
+            
 
-    competitionsubmittions = CompetitionSubmittion.objects.all()
-    for competitionsubmittion in competitionsubmittions:
-        competitionsubmittion.createdate = competitionsubmittion.createdate
-        competitionsubmittion.editdate = competitionsubmittion.editdate
+            competitionsubmittions = CompetitionSubmittion.objects.all()
+            for competitionsubmittion in competitionsubmittions:
+                competitionsubmittion.createdate = competitionsubmittion.createdate
+                competitionsubmittion.editdate = competitionsubmittion.editdate
 
-    accounts = Account.objects.all()
-    for account in accounts:
-        account.createdate = account.createdate
-        account.editdate = account.editdate
+            accounts = Account.objects.all()
+            for account in accounts:
+                account.createdate = account.createdate
+                account.editdate = account.editdate
 
-    competitions = Competition.objects.all()
-    for competition in competitions:
-        competition.createdate = competition.createdate
-        competition.editdate = competition.editdate
+            competitions = Competition.objects.all()
+            for competition in competitions:
+                competition.createdate = competition.createdate
+                competition.editdate = competition.editdate
 
-    context = {
-        'competitionsubmittionlike': competitionsubmittionlike,
-        'competitionsubmittions': competitionsubmittions,
-        'accounts': accounts,    
-        'competitions': competitions,
-    }
-    return render(request, 'admincompetitionsubmittionlike/competitionsubmittionlike_edit.html', context)
+            context = {
+                'competitionsubmittionlike': competitionsubmittionlike,
+                'competitionsubmittions': competitionsubmittions,
+                'accounts': accounts,    
+                'competitions': competitions,
+            }
+            return render(request, 'admincompetitionsubmittionlike/competitionsubmittionlike_edit.html', context)
+        else:
+            return redirect('homepage:index')
+    else:
+        return redirect('homepage:index')
 
 def getNum(x):
     return int(''.join(ele for ele in x if ele.isdigit()))
 
 def update(request, id):
-    competitionsubmittionlike = CompetitionSubmittionLike.objects.filter(competitionsubmittionlikeid = id).update(accountid = Account.objects.get(accountid = getNum(request.POST['accountid'])))
-    competitionsubmittionlike = CompetitionSubmittionLike.objects.filter(competitionsubmittionlikeid = id).update(competitionsubmittionid = CompetitionSubmittion.objects.get(competitionsubmittionid = getNum(request.POST['competitionsubmittionid'])))
-    competitionsubmittionlike = CompetitionSubmittionLike.objects.get(competitionsubmittionlikeid=id)
-    competitionsubmittionlike.status=request.POST['status']
-    competitionsubmittionlike.isenable=request.POST['isenable']
-    competitionsubmittionlike.note=request.POST['note']
-    competitionsubmittionlike.save()
-    return redirect('/admincompetitionsubmittionlike/')
+    if request.session.has_key('username'):
+        account = Account.objects.get(username = request.session['username'])
+        if account.accounttypeid.accounttypeid == 1:
+            competitionsubmittionlike = CompetitionSubmittionLike.objects.filter(competitionsubmittionlikeid = id).update(accountid = Account.objects.get(accountid = getNum(request.POST['accountid'])))
+            competitionsubmittionlike = CompetitionSubmittionLike.objects.filter(competitionsubmittionlikeid = id).update(competitionsubmittionid = CompetitionSubmittion.objects.get(competitionsubmittionid = getNum(request.POST['competitionsubmittionid'])))
+            competitionsubmittionlike = CompetitionSubmittionLike.objects.get(competitionsubmittionlikeid=id)
+            competitionsubmittionlike.status=request.POST['status']
+            competitionsubmittionlike.isenable=request.POST['isenable']
+            competitionsubmittionlike.note=request.POST['note']
+            competitionsubmittionlike.save()
+            return redirect('/admincompetitionsubmittionlike/')
+        else:
+            return redirect('homepage:index')
+    else:
+        return redirect('homepage:index')
 
 
 def delete(request, id):
-    competitionsubmittionlike = CompetitionSubmittionLike.objects.get(competitionsubmittionlikeid= id)
-    competitionsubmittionlike.delete()
-    return redirect('/admincompetitionsubmittionlike/')
+    if request.session.has_key('username'):
+        account = Account.objects.get(username = request.session['username'])
+        if account.accounttypeid.accounttypeid == 1:
+            competitionsubmittionlike = CompetitionSubmittionLike.objects.get(competitionsubmittionlikeid= id)
+            competitionsubmittionlike.delete()
+            return redirect('/admincompetitionsubmittionlike/')
+        else:
+            return redirect('homepage:index')
+    else:
+        return redirect('homepage:index')
 
 
 #lấy giá trị competition được nhập vào để giới hạn giá trị show ra của competitionsubmittion

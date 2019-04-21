@@ -1,119 +1,164 @@
 from django.shortcuts import render, redirect
-from homepage.models import ActivityReply, Enrollment, Activity, Lesson, Chapter, Item, Account, Subject
+from homepage.models import ActivityReply, Enrollment, Activity, Lesson, Chapter, Item, Account, Subject,UserDetail
 from datetime import datetime
 from django.http import JsonResponse
 # Create your views here.
 
 def index(request):
-    activityreplys = ActivityReply.objects.all()
-    for activityreply in activityreplys:
-        activityreply.createdate = activityreply.createdate
-        activityreply.editdate = activityreply.editdate
-    context = {'activityreplys': activityreplys}
-    return render(request, 'adminactivityreply/activityreply_show.html', context)
+    if request.session.has_key('username'):
+        account = Account.objects.get(username = request.session['username'])
+        if account.accounttypeid.accounttypeid == 1:
+            activityreplys = ActivityReply.objects.all()
+            for activityreply in activityreplys:
+                activityreply.createdate = activityreply.createdate
+                activityreply.editdate = activityreply.editdate
+            userdetail=UserDetail.objects.get(accountid=account)
+            context = {
+                'userdetail':userdetail,
+                'account':account,
+                'activityreplys': activityreplys}
+            return render(request, 'adminactivityreply/activityreply_show.html', context)
+        else:
+            return redirect('homepage:index')
+    else:
+        return redirect('homepage:index')
 
 def create(request):
-    if request.method == 'POST':
-        activityreply = ActivityReply( 
-                                enrollmentid = Enrollment.objects.get(enrollmentid = request.POST['accountid']),
-                                activityid = Activity.objects.get(activityid = request.POST['activityid']),
-                                createdate= datetime.now(), 
-                                editdate= datetime.now(),
-                                content=request.POST['content'],
-                                rate=request.POST['rate'],
-                                isenable=request.POST['isenable'],  
-                                note=request.POST['note'])
-        activityreply.save()
-        return redirect('/adminactivityreply/')
+    if request.session.has_key('username'):
+        account = Account.objects.get(username = request.session['username'])
+        if account.accounttypeid.accounttypeid == 1:
+            
+            
+            if request.method == 'POST':
+                activityreply = ActivityReply( 
+                                        enrollmentid = Enrollment.objects.get(enrollmentid = request.POST['accountid']),
+                                        activityid = Activity.objects.get(activityid = request.POST['activityid']),
+                                        createdate= datetime.now(), 
+                                        editdate= datetime.now(),
+                                        content=request.POST['content'],
+                                        rate=request.POST['rate'],
+                                        isenable=request.POST['isenable'],  
+                                        note=request.POST['note'])
+                activityreply.save()
+                return redirect('/adminactivityreply/')
+            else:
+                activitys = Activity.objects.all()
+                for activity in activitys:
+                    activity.createdate = activity.createdate
+                    activity.editdate = activity.editdate
+
+                accounts = Account.objects.all()
+                subjects = Subject.objects.all()
+                enrollments = Enrollment.objects.all()
+                
+                for account in accounts:
+                    account.createdate = account.createdate
+                    account.editdate = account.editdate
+
+                for enrollment in enrollments:
+                    enrollment.createdate = enrollment.createdate
+                    enrollment.editdate = enrollment.editdate
+
+                for subject in subjects:
+                    subject.createdate = subject.createdate
+                    subject.editdate = subject.editdate
+                userdetail=UserDetail.objects.get(accountid=account)
+                context = {
+                    'userdetail':userdetail,
+                    'account':account,
+                    'accounts': accounts,
+                    'subjects': subjects,
+                    'activitys': activitys,
+                    'enrollments': enrollments
+                }
+            
+            return render(request, 'adminactivityreply/activityreply_create.html', context)
+        else:
+            return redirect('homepage:index')
     else:
-        activitys = Activity.objects.all()
-        for activity in activitys:
-            activity.createdate = activity.createdate
-            activity.editdate = activity.editdate
-
-        accounts = Account.objects.all()
-        subjects = Subject.objects.all()
-        enrollments = Enrollment.objects.all()
-        
-        for account in accounts:
-            account.createdate = account.createdate
-            account.editdate = account.editdate
-
-        for enrollment in enrollments:
-            enrollment.createdate = enrollment.createdate
-            enrollment.editdate = enrollment.editdate
-
-        for subject in subjects:
-            subject.createdate = subject.createdate
-            subject.editdate = subject.editdate
-        
-        context = {
-            'accounts': accounts,
-            'subjects': subjects,
-            'activitys': activitys,
-            'enrollments': enrollments
-        }
-       
-    return render(request, 'adminactivityreply/activityreply_create.html', context)
+        return redirect('homepage:index')
 
 def edit(request, id):
-    activityreply = ActivityReply.objects.get(activityreplyid=id)
-    activityreply.createdate = activityreply.createdate
-    activityreply.editdate = datetime.now()
+    if request.session.has_key('username'):
+        acc = Account.objects.get(username = request.session['username'])
+        if acc.accounttypeid.accounttypeid == 1:
+            activityreply = ActivityReply.objects.get(activityreplyid=id)
+            activityreply.createdate = activityreply.createdate
+            activityreply.editdate = datetime.now()
 
-    activitys = Activity.objects.all()
-    for activity in activitys:
-        activity.createdate = activity.createdate
-        activity.editdate = activity.editdate
+            activitys = Activity.objects.all()
+            for activity in activitys:
+                activity.createdate = activity.createdate
+                activity.editdate = activity.editdate
 
-    accounts = Account.objects.all()
-    enrollments = Enrollment.objects.all()
-    subjects = Subject.objects.all()
-        
-    for account in accounts:
-        account.createdate = account.createdate
-        account.editdate = account.editdate
+            accounts = Account.objects.all()
+            enrollments = Enrollment.objects.all()
+            subjects = Subject.objects.all()
+                
+            for account in accounts:
+                account.createdate = account.createdate
+                account.editdate = account.editdate
 
-    for enrollment in enrollments:
-        enrollment.createdate = enrollment.createdate
-        enrollment.editdate = enrollment.editdate
+            for enrollment in enrollments:
+                enrollment.createdate = enrollment.createdate
+                enrollment.editdate = enrollment.editdate
 
-    for subject in subjects:
-        subject.createdate = subject.createdate
-        subject.editdate = subject.editdate
-        
-    context = {
-        'accounts': accounts,
-        'subjects': subjects,
-        'activityreply': activityreply,
-        'activitys': activitys,
-        'enrollments': enrollments,
-    }
+            for subject in subjects:
+                subject.createdate = subject.createdate
+                subject.editdate = subject.editdate
 
-    return render(request, 'adminactivityreply/activityreply_edit.html', context)
+            userdetail=UserDetail.objects.get(accountid=acc)
+            context = {
+                'userdetail':userdetail,
+                'acc':acc,
+                'accounts': accounts,
+                'subjects': subjects,
+                'activityreply': activityreply,
+                'activitys': activitys,
+                'enrollments': enrollments,
+            }
+
+            return render(request, 'adminactivityreply/activityreply_edit.html', context)
+        else:
+            return redirect('homepage:index')
+    else:
+        return redirect('homepage:index')
 
 def getNum(x):
     return int(''.join(ele for ele in x if ele.isdigit()))
 
 def update(request, id):
-    activityreply = ActivityReply.objects.filter(activityreplyid = id).update(enrollmentid = Enrollment.objects.get(enrollmentid = getNum(request.POST['accountid'])))
-    activityreply = ActivityReply.objects.filter(activityreplyid = id).update(activityid = Activity.objects.get(activityid = getNum(request.POST['activityid'])))
-    activityreply = ActivityReply.objects.get(activityreplyid=id)
-    activityreply.createdate=activityreply.createdate
-    activityreply.editdate=datetime.now()
-    activityreply.content=request.POST['content']
-    activityreply.rate=request.POST['rate']
-    activityreply.isenable=request.POST['isenable']
-    activityreply.note=request.POST['note']
-    activityreply.save()
-    return redirect('/adminactivityreply/')
+    if request.session.has_key('username'):
+        account = Account.objects.get(username = request.session['username'])
+        if account.accounttypeid.accounttypeid == 1:
+            activityreply = ActivityReply.objects.filter(activityreplyid = id).update(enrollmentid = Enrollment.objects.get(enrollmentid = getNum(request.POST['accountid'])))
+            activityreply = ActivityReply.objects.filter(activityreplyid = id).update(activityid = Activity.objects.get(activityid = getNum(request.POST['activityid'])))
+            activityreply = ActivityReply.objects.get(activityreplyid=id)
+            activityreply.createdate=activityreply.createdate
+            activityreply.editdate=datetime.now()
+            activityreply.content=request.POST['content']
+            activityreply.rate=request.POST['rate']
+            activityreply.isenable=request.POST['isenable']
+            activityreply.note=request.POST['note']
+            activityreply.save()
+            return redirect('/adminactivityreply/')
+        else:
+            return redirect('homepage:index')
+    else:
+        return redirect('homepage:index')
 
 
 def delete(request, id):
-    activityreply = ActivityReply.objects.get(activityreplyid= id)
-    activityreply.delete()
-    return redirect('/adminactivityreply/')
-
+    if request.session.has_key('username'):
+        account = Account.objects.get(username = request.session['username'])
+        if account.accounttypeid.accounttypeid == 1:
+            activityreply = ActivityReply.objects.get(activityreplyid= id)
+            activityreply.delete()
+            return redirect('/adminactivityreply/')
+        else:
+            return redirect('homepage:index')
+    else:
+        return redirect('homepage:index')
 
 #lấy giá trị subject được nhập vào để giới hạn giá trị show ra của chapter
 # def validate_subjectactivityreply(request):

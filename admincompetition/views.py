@@ -2,164 +2,200 @@ from django.shortcuts import render, redirect
 from homepage.models import Competition, EnviromentCate, Account, Subject
 from datetime import datetime
 from django.http import JsonResponse
+from homepage.myfunction import tokenFile
 
 # Create your views here.
 
 def index(request):
-    competitions = Competition.objects.all()
-    for competition in competitions:
-        competition.createdate = competition.createdate
-        competition.editdate = competition.editdate
-        competition.opendate = competition.opendate.strftime("%Y-%m-%d %H:%M:%S")
-        competition.enddate = competition.enddate.strftime("%Y-%m-%d %H:%M:%S")
-    context = {'competitions': competitions}
-    return render(request, 'admincompetition/competition_show.html', context)
+    if request.session.has_key('username'):
+        account = Account.objects.get(username = request.session['username'])
+        if account.accounttypeid.accounttypeid == 1:
+            competitions = Competition.objects.all()
+            for competition in competitions:
+                competition.createdate = competition.createdate
+                competition.editdate = competition.editdate
+                competition.opendate = competition.opendate.strftime("%Y-%m-%d %H:%M:%S")
+                competition.enddate = competition.enddate.strftime("%Y-%m-%d %H:%M:%S")
+            context = {'competitions': competitions}
+            return render(request, 'admincompetition/competition_show.html', context)
+        else:
+            return redirect('homepage:index')
+    else:
+        return redirect('homepage:index')
 
 def create(request):
-    if request.method == 'POST':     
-            #Lấy url của avatar
-        try:
-            token_avatar = request.FILES['image']
-        except:
-            token_avatar = None
-        ava = ''
-        if token_avatar != None:
-            ava = tokenFile(token_avatar)
+    if request.session.has_key('username'):
+        account = Account.objects.get(username = request.session['username'])
+        if account.accounttypeid.accounttypeid == 1:
+            if request.method == 'POST':     
+                    #Lấy url của avatar
+                try:
+                    token_avatar = request.FILES['image']
+                except:
+                    token_avatar = None
+                ava = ''
+                if token_avatar != None:
+                    ava = tokenFile(token_avatar)
 
-        competition = Competition( 
-                                accountid = Account.objects.get(accountid = request.POST['accountid']),
-                                enviromentcateid = EnviromentCate.objects.get(enviromentcateid = request.POST['enviromentcateid']),
-                                competitionname=request.POST['competitionname'], 
-                                createdate= datetime.now(), 
-                                editdate= datetime.now(),
-                                opendate= request.POST['opendate'],
-                                enddate= request.POST['enddate'],
-                                description=request.POST['description'],
-                                content=request.POST['content'],
-                                avatar=ava,
-                                viewcount=request.POST['viewcount'],  
-                                likecount=request.POST['likecount'],  
-                                isenable=request.POST['isenable'],  
-                                note=request.POST['note'])
-        competition.save()
-        return redirect('/admincompetition/')
+                competition = Competition( 
+                                        accountid = Account.objects.get(accountid = request.POST['accountid']),
+                                        enviromentcateid = EnviromentCate.objects.get(enviromentcateid = request.POST['enviromentcateid']),
+                                        competitionname=request.POST['competitionname'], 
+                                        createdate= datetime.now(), 
+                                        editdate= datetime.now(),
+                                        opendate= request.POST['opendate'],
+                                        enddate= request.POST['enddate'],
+                                        description=request.POST['description'],
+                                        content=request.POST['content'],
+                                        avatar=ava,
+                                        viewcount=request.POST['viewcount'],  
+                                        likecount=request.POST['likecount'],  
+                                        isenable=request.POST['isenable'],  
+                                        note=request.POST['note'])
+                competition.save()
+                return redirect('/admincompetition/')
+            else:
+                # subjectparts = SubjectPart.objects.all()
+                # for subjectpart in subjectparts:
+                #     subjectpart.createdate = subjectpart.createdate
+                #     subjectpart.editdate = subjectpart.editdate
+
+                enviromentcates = EnviromentCate.objects.all()
+                for enviromentcate in enviromentcates:
+                    enviromentcate.createdate = enviromentcate.createdate
+                    enviromentcate.editdate = enviromentcate.editdate
+
+                accounts = Account.objects.all()
+                subjects = Subject.objects.all()
+                
+                for account in accounts:
+                    account.createdate = account.createdate
+                    account.editdate = account.editdate
+
+                for subject in subjects:
+                    subject.createdate = subject.createdate
+                    subject.editdate = subject.editdate
+                
+                context = {
+                    'accounts': accounts,
+                    'subjects': subjects,
+                    # 'subjectparts': subjectparts,
+                    'enviromentcates': enviromentcates,
+                }
+            
+            return render(request, 'admincompetition/competition_create.html', context)
+        else:
+            return redirect('homepage:index')
     else:
-        # subjectparts = SubjectPart.objects.all()
-        # for subjectpart in subjectparts:
-        #     subjectpart.createdate = subjectpart.createdate
-        #     subjectpart.editdate = subjectpart.editdate
-
-        enviromentcates = EnviromentCate.objects.all()
-        for enviromentcate in enviromentcates:
-            enviromentcate.createdate = enviromentcate.createdate
-            enviromentcate.editdate = enviromentcate.editdate
-
-        accounts = Account.objects.all()
-        subjects = Subject.objects.all()
-        
-        for account in accounts:
-            account.createdate = account.createdate
-            account.editdate = account.editdate
-
-        for subject in subjects:
-            subject.createdate = subject.createdate
-            subject.editdate = subject.editdate
-        
-        context = {
-            'accounts': accounts,
-            'subjects': subjects,
-            # 'subjectparts': subjectparts,
-            'enviromentcates': enviromentcates,
-        }
-       
-    return render(request, 'admincompetition/competition_create.html', context)
+        return redirect('homepage:index')
 
 def edit(request, id):
-    competition = Competition.objects.get(competitionid=id)
-    competition.createdate = competition.createdate
-    competition.editdate = datetime.now()
-    competition.opendate = competition.opendate.strftime("%Y-%m-%d %H:%M:%S")
-    competition.enddate = competition.enddate.strftime("%Y-%m-%d %H:%M:%S")
+    if request.session.has_key('username'):
+        account = Account.objects.get(username = request.session['username'])
+        if account.accounttypeid.accounttypeid == 1:
+            competition = Competition.objects.get(competitionid=id)
+            competition.createdate = competition.createdate
+            competition.editdate = datetime.now()
+            competition.opendate = competition.opendate.strftime("%Y-%m-%d %H:%M:%S")
+            competition.enddate = competition.enddate.strftime("%Y-%m-%d %H:%M:%S")
 
-    # subjectparts = SubjectPart.objects.all()
-    # for subjectpart in subjectparts:
-    #     subjectpart.createdate = subjectpart.createdate
-    #     subjectpart.editdate = subjectpart.editdate
+            # subjectparts = SubjectPart.objects.all()
+            # for subjectpart in subjectparts:
+            #     subjectpart.createdate = subjectpart.createdate
+            #     subjectpart.editdate = subjectpart.editdate
 
-    enviromentcates = EnviromentCate.objects.all()
-    for enviromentcate in enviromentcates:
-        enviromentcate.createdate = enviromentcate.createdate
-        enviromentcate.editdate = enviromentcate.editdate
+            enviromentcates = EnviromentCate.objects.all()
+            for enviromentcate in enviromentcates:
+                enviromentcate.createdate = enviromentcate.createdate
+                enviromentcate.editdate = enviromentcate.editdate
 
-    accounts = Account.objects.all()
-    subjects = Subject.objects.all()
-        
-    for account in accounts:
-        account.createdate = account.createdate
-        account.editdate = account.editdate
+            accounts = Account.objects.all()
+            subjects = Subject.objects.all()
+                
+            for account in accounts:
+                account.createdate = account.createdate
+                account.editdate = account.editdate
 
-    for subject in subjects:
-        subject.createdate = subject.createdate
-        subject.editdate = subject.editdate
-        
-    context = {
-        'accounts': accounts,
-        'subjects': subjects,
-        'competition': competition,
-        # 'subjectparts': subjectparts,
-        'enviromentcates': enviromentcates,
-    }
+            for subject in subjects:
+                subject.createdate = subject.createdate
+                subject.editdate = subject.editdate
+                
+            context = {
+                'accounts': accounts,
+                'subjects': subjects,
+                'competition': competition,
+                # 'subjectparts': subjectparts,
+                'enviromentcates': enviromentcates,
+            }
 
-    return render(request, 'admincompetition/competition_edit.html', context)
+            return render(request, 'admincompetition/competition_edit.html', context)
+        else:
+            return redirect('homepage:index')
+    else:
+        return redirect('homepage:index')
 
 def getNum(x):
     return int(''.join(ele for ele in x if ele.isdigit()))
 
 def update(request, id):
-    competition = Competition.objects.filter(competitionid = id).update(accountid = Account.objects.get(accountid = getNum(request.POST['accountid'])))
-    competition = Competition.objects.filter(competitionid = id).update(enviromentcateid = EnviromentCate.objects.get(enviromentcateid = getNum(request.POST['enviromentcateid'])))
-    competition = Competition.objects.get(competitionid=id)
-    
-    #Lấy url của avatar
-    try:
-        token_avatar = request.FILES['image']
-    except:
-        token_avatar = None
-    ava = ''
-    if token_avatar != None:
-        ava = tokenFile(token_avatar)
-    else:
-        ava = competition.avatar
+    if request.session.has_key('username'):
+        account = Account.objects.get(username = request.session['username'])
+        if account.accounttypeid.accounttypeid == 1:
+            competition = Competition.objects.filter(competitionid = id).update(accountid = Account.objects.get(accountid = getNum(request.POST['accountid'])))
+            competition = Competition.objects.filter(competitionid = id).update(enviromentcateid = EnviromentCate.objects.get(enviromentcateid = getNum(request.POST['enviromentcateid'])))
+            competition = Competition.objects.get(competitionid=id)
+            
+            #Lấy url của avatar
+            try:
+                token_avatar = request.FILES['image']
+            except:
+                token_avatar = None
+            ava = ''
+            if token_avatar != None:
+                ava = tokenFile(token_avatar)
+            else:
+                ava = competition.avatar
 
-    if request.POST['opendate'] == '':
-        opendate = competition.opendate
+            if request.POST['opendate'] == '':
+                opendate = competition.opendate
+            else:
+                opendate = request.POST['opendate']
+            if request.POST['enddate'] == '':
+                enddate = competition.enddate
+            else:
+                enddate = request.POST['enddate']
+                
+            competition.competitionname=request.POST['competitionname']
+            competition.createdate=competition.createdate
+            competition.editdate=datetime.now()
+            competition.opendate= opendate
+            competition.enddate= enddate
+            competition.description=request.POST['description']
+            competition.content=request.POST['content']
+            competition.avatar=ava
+            competition.viewcount=request.POST['viewcount']
+            competition.likecount=request.POST['likecount']
+            competition.isenable=request.POST['isenable']
+            competition.note=request.POST['note']
+            competition.save()
+            return redirect('/admincompetition/')
+        else:
+            return redirect('homepage:index')
     else:
-        opendate = request.POST['opendate']
-    if request.POST['enddate'] == '':
-        enddate = competition.enddate
-    else:
-        enddate = request.POST['enddate']
-        
-    competition.competitionname=request.POST['competitionname']
-    competition.createdate=competition.createdate
-    competition.editdate=datetime.now()
-    competition.opendate= opendate
-    competition.enddate= enddate
-    competition.description=request.POST['description']
-    competition.content=request.POST['content']
-    competition.avatar=ava
-    competition.viewcount=request.POST['viewcount']
-    competition.likecount=request.POST['likecount']
-    competition.isenable=request.POST['isenable']
-    competition.note=request.POST['note']
-    competition.save()
-    return redirect('/admincompetition/')
+        return redirect('homepage:index')
 
 
 def delete(request, id):
-    competition = Competition.objects.get(competitionid= id)
-    competition.delete()
-    return redirect('/admincompetition/')
+    if request.session.has_key('username'):
+        account = Account.objects.get(username = request.session['username'])
+        if account.accounttypeid.accounttypeid == 1:
+            competition = Competition.objects.get(competitionid= id)
+            competition.delete()
+            return redirect('/admincompetition/')
+        else:
+            return redirect('homepage:index')
+    else:
+        return redirect('homepage:index')
 
 
 #lấy giá trị subject được nhập vào để giới hạn giá trị show ra của subjectpart

@@ -218,6 +218,7 @@ def myLogin(request):
 def myLogout(request):
     try:
         del request.session['username']
+        del request.session['look']
     except:
         pass
     return redirect('homepage:index')
@@ -328,7 +329,7 @@ def vision(request):
     }
     return render(request, 'homepage/vision.html', context)
 
-# Hàm load trang Đội Ngũ
+# Hàm load trang Chuyên gia
 def team(request):
     islog = 0
     if request.session.has_key('username'):
@@ -748,4 +749,83 @@ def validate_username(request):
 #     }
 #     return JsonResponse(data)
 
+def adminchat(request):
+    if request.session.has_key('username'):
+        account = Account.objects.get(username = request.session['username'])
+        userdetail=UserDetail.objects.get(accountid=account)
+        context = {
+                   'account':account,
+                    'userdetail':userdetail
+                        }
+        return render(request,'homepage/inbox.html',context)
+    else:
+        return redirect('homepage:index')
 
+def userguide(request):
+    islog = 0
+    if request.session.has_key('username'):
+        islog = 1
+        account = Account.objects.get(username = request.session['username'])
+        context={
+            'account':account,
+            'islog': islog,
+        }
+        return render(request, 'homepage/userguide.html', context)
+    
+    context={
+            'islog': islog,
+        }
+    
+    return render(request, 'homepage/userguide.html', context)
+
+def sitemap(request):
+    islog = 0
+    if request.session.has_key('username'):
+        islog = 1
+        account = Account.objects.get(username = request.session['username'])
+        context={
+            'account':account,
+            'islog': islog,
+        }
+        return render(request, 'homepage/sitemap.html', context)
+    
+    context={
+            'islog': islog,
+        }
+    
+    return render(request, 'homepage/sitemap.html', context)
+
+def contact(request):
+    islog = 0
+    # POST method
+    if request.method == "POST":
+        fname = request.POST.get('firstname') 
+        lname = request.POST.get('lastname')
+        email = request.POST.get('email')
+        content = request.POST.get('content')
+        fullname=lname+' '+fname+' Hỗ trợ'
+        fullcontent=''' Bởi '''+email+''' 
+        '''+ content
+        send_mail(fullname,
+                fullcontent,
+                'vsprodhsp@gmail.com',
+                ['vsprosuperuser@gmail.com'],
+                fail_silently=False
+            )
+        return redirect('homepage:contact')
+
+    if request.session.has_key('username'):
+        islog = 1
+        account = Account.objects.get(username = request.session['username'])
+        context={
+            'account':account,
+            'islog': islog,
+        }
+        
+        return render(request, 'homepage/contact.html', context)
+    
+    context={
+            'islog': islog,
+        }
+    
+    return render(request, 'homepage/contact.html', context)

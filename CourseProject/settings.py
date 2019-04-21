@@ -206,4 +206,4 @@ CKEDITOR_CONFIGS = {
         'toolbar': None,
     },
 }
-
+SESSION_COOKIE_AGE = 43200

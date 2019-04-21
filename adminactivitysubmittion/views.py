@@ -7,127 +7,147 @@ from django.http import JsonResponse
 # Create your views here.
 
 def index(request):
-    activitysubmittions = ActivitySubmittion.objects.all()
-    for activitysubmittion in activitysubmittions:
-        activitysubmittion.createdate = activitysubmittion.createdate
-        activitysubmittion.editdate = activitysubmittion.editdate
-    context = {'activitysubmittions': activitysubmittions}
-    return render(request, 'adminactivitysubmittion/activitysubmittion_show.html', context)
+    if request.session.has_key('username'):
+        account = Account.objects.get(username = request.session['username'])
+        if account.accounttypeid.accounttypeid == 1:
+            activitysubmittions = ActivitySubmittion.objects.all()
+            for activitysubmittion in activitysubmittions:
+                activitysubmittion.createdate = activitysubmittion.createdate
+                activitysubmittion.editdate = activitysubmittion.editdate
+            context = {'activitysubmittions': activitysubmittions}
+            return render(request, 'adminactivitysubmittion/activitysubmittion_show.html', context)
+        else:
+            return redirect('homepage:index')
+    else:
+        return redirect('homepage:index')
 
 def create(request):
-    if request.method == 'POST':
-        # try:
-        #     token_link = request.FILES['link']
-        # except:
-        #     token_link = None
-        # lin = ''
-        # if token_link != None:
-        #     lin = tokenFile(token_link)
-        activitysubmittion = ActivitySubmittion( 
-                                accountid = Account.objects.get(accountid = request.POST['accountid']),
-                                activityid = Activity.objects.get(activityid = request.POST['activityid']),
-                                createdate= datetime.now(), 
-                                editdate= datetime.now(),
-                                description=request.POST['description'],
-                                content=request.POST['content'],
-                                link=request.POST['link'],
-                                isenable=request.POST['isenable'],  
-                                note=request.POST['note'])
-        activitysubmittion.save()
-        return redirect('/adminactivitysubmittion/')
+    if request.session.has_key('username'):
+        account = Account.objects.get(username = request.session['username'])
+        if account.accounttypeid.accounttypeid == 1:
+            if request.method == 'POST':
+                # try:
+                #     token_link = request.FILES['link']
+                # except:
+                #     token_link = None
+                # lin = ''
+                # if token_link != None:
+                #     lin = tokenFile(token_link)
+                activitysubmittion = ActivitySubmittion( 
+                                        accountid = Account.objects.get(accountid = request.POST['accountid']),
+                                        activityid = Activity.objects.get(activityid = request.POST['activityid']),
+                                        createdate= datetime.now(), 
+                                        editdate= datetime.now(),
+                                        description=request.POST['description'],
+                                        content=request.POST['content'],
+                                        link=request.POST['link'],
+                                        isenable=request.POST['isenable'],  
+                                        note=request.POST['note'])
+                activitysubmittion.save()
+                return redirect('/adminactivitysubmittion/')
+            else:
+                activitys = Activity.objects.all()
+                for activity in activitys:
+                    activity.createdate = activity.createdate
+                    activity.editdate = activity.editdate
+                
+                accounts = Account.objects.all()
+                subjects = Subject.objects.all()
+                
+                for account in accounts:
+                    account.createdate = account.createdate
+                    account.editdate = account.editdate
+
+                for subject in subjects:
+                    subject.createdate = subject.createdate
+                    subject.editdate = subject.editdate
+
+                context = {
+                    'accounts': accounts,
+                    'subjects': subjects,
+                    'activitys': activitys,
+                }
+                
+            return render(request, 'adminactivitysubmittion/activitysubmittion_create.html', context)
+        else:
+            return redirect('homepage:index')
     else:
-        activitys = Activity.objects.all()
-        for activity in activitys:
-            activity.createdate = activity.createdate
-            activity.editdate = activity.editdate
-        
-        accounts = Account.objects.all()
-        subjects = Subject.objects.all()
-        
-        for account in accounts:
-            account.createdate = account.createdate
-            account.editdate = account.editdate
-
-        for subject in subjects:
-            subject.createdate = subject.createdate
-            subject.editdate = subject.editdate
-
-        context = {
-            'accounts': accounts,
-            'subjects': subjects,
-            'activitys': activitys,
-        }
-        
-    return render(request, 'adminactivitysubmittion/activitysubmittion_create.html', context)
+        return redirect('homepage:index')
 
 def edit(request, id):
-    # try:
-    #     token_link = request.FILES['link']
-    # except:
-    #     token_link = None
-    # lin = ''
-    # if token_link != None:
-    #     lin = tokenFile(token_link)
-    activitysubmittion = ActivitySubmittion.objects.get(activitysubmittionid=id)
-    # activitysubmittion.link = activitysubmittion.link
-    activitysubmittion.createdate = activitysubmittion.createdate
-    activitysubmittion.editdate = datetime.now()
-    accounts = Account.objects.all()
-    subjects = Subject.objects.all()
-    subjectid = activitysubmittion.activityid.itemid.lessonid.chapterid.subjectid
-        
-    for account in accounts:
-        account.createdate = account.createdate
-        account.editdate = account.editdate
+    if request.session.has_key('username'):
+        account = Account.objects.get(username = request.session['username'])
+        if account.accounttypeid.accounttypeid == 1:
+            activitysubmittion = ActivitySubmittion.objects.get(activitysubmittionid=id)
+            # activitysubmittion.link = activitysubmittion.link
+            activitysubmittion.createdate = activitysubmittion.createdate
+            activitysubmittion.editdate = datetime.now()
+            accounts = Account.objects.all()
+            subjects = Subject.objects.all()
+            subjectid = activitysubmittion.activityid.itemid.lessonid.chapterid.subjectid
+                
+            for account in accounts:
+                account.createdate = account.createdate
+                account.editdate = account.editdate
 
-    for subject in subjects:
-        subject.createdate = subject.createdate
-        subject.editdate = subject.editdate
+            for subject in subjects:
+                subject.createdate = subject.createdate
+                subject.editdate = subject.editdate
 
-    activitys = Activity.objects.all()
-    for activity in activitys:
-        activity.createdate = activity.createdate
-        activity.editdate = activity.editdate
-    
-    context = {
-        'activitysubmittion': activitysubmittion,
-        'activitys': activitys,
-        'accounts': accounts,
-        'subjects': subjects,
-        'subjectid': subjectid,
-    }
-    return render(request, 'adminactivitysubmittion/activitysubmittion_edit.html', context)
+            activitys = Activity.objects.all()
+            for activity in activitys:
+                activity.createdate = activity.createdate
+                activity.editdate = activity.editdate
+            
+            context = {
+                'activitysubmittion': activitysubmittion,
+                'activitys': activitys,
+                'accounts': accounts,
+                'subjects': subjects,
+                'subjectid': subjectid,
+            }
+            return render(request, 'adminactivitysubmittion/activitysubmittion_edit.html', context)
+        else:
+            return redirect('homepage:index')
+    else:
+        return redirect('homepage:index')
 
 def getNum(x):
     return int(''.join(ele for ele in x if ele.isdigit()))
 
 def update(request, id):
-    # try:
-    #     token_link = request.FILES['link']
-    # except:
-    #     token_link = None
-    # lin = ''
-    # if token_link != None:
-    #     lin = tokenFile(token_link)
-    activitysubmittion = ActivitySubmittion.objects.filter(activitysubmittionid = id).update(accountid = Account.objects.get(accountid = getNum(request.POST['accountid'])))
-    activitysubmittion = ActivitySubmittion.objects.filter(activitysubmittionid = id).update(activityid = Activity.objects.get(activityid = getNum(request.POST['activityid'])))
-    activitysubmittion = ActivitySubmittion.objects.get(activitysubmittionid=id)
-    activitysubmittion.createdate=activitysubmittion.createdate
-    activitysubmittion.editdate=datetime.now()
-    activitysubmittion.description=request.POST['description']
-    activitysubmittion.content=request.POST['content']
-    activitysubmittion.link=request.POST['link']
-    activitysubmittion.isenable=request.POST['isenable']
-    activitysubmittion.note=request.POST['note']
-    activitysubmittion.save()
-    return redirect('/adminactivitysubmittion/')
+    if request.session.has_key('username'):
+        account = Account.objects.get(username = request.session['username'])
+        if account.accounttypeid.accounttypeid == 1:
+            activitysubmittion = ActivitySubmittion.objects.filter(activitysubmittionid = id).update(accountid = Account.objects.get(accountid = getNum(request.POST['accountid'])))
+            activitysubmittion = ActivitySubmittion.objects.filter(activitysubmittionid = id).update(activityid = Activity.objects.get(activityid = getNum(request.POST['activityid'])))
+            activitysubmittion = ActivitySubmittion.objects.get(activitysubmittionid=id)
+            activitysubmittion.createdate=activitysubmittion.createdate
+            activitysubmittion.editdate=datetime.now()
+            activitysubmittion.description=request.POST['description']
+            activitysubmittion.content=request.POST['content']
+            activitysubmittion.link=request.POST['link']
+            activitysubmittion.isenable=request.POST['isenable']
+            activitysubmittion.note=request.POST['note']
+            activitysubmittion.save()
+            return redirect('/adminactivitysubmittion/')
+        else:
+            return redirect('homepage:index')
+    else:
+        return redirect('homepage:index')
 
 
 def delete(request, id):
-    activitysubmittion = ActivitySubmittion.objects.get(activitysubmittionid= id)
-    activitysubmittion.delete()
-    return redirect('/adminactivitysubmittion/')
-
+    if request.session.has_key('username'):
+        account = Account.objects.get(username = request.session['username'])
+        if account.accounttypeid.accounttypeid == 1:
+            activitysubmittion = ActivitySubmittion.objects.get(activitysubmittionid= id)
+            activitysubmittion.delete()
+            return redirect('/adminactivitysubmittion/')
+        else:
+            return redirect('homepage:index')
+    else:
+        return redirect('homepage:index')
 
 #lấy giá trị subject được nhập vào để giới hạn giá trị show ra của chapter
 def validate_subjectactivitysubmittion(request):

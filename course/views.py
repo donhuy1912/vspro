@@ -126,7 +126,22 @@ def coursepart(request, id):
             sumTime = subpartDetail[2]
             sublikes = getlikeSubjectId(subject) 
             subpartdetail = SubPartDetail(avgRate, countAR, converttimetoString(sumTime), sublikes)
-            
+            # part game
+            listgame = Game.objects.filter(subjectid=subject.subjectid)
+            countgame = len(listgame)
+            grate = 0
+            for ga in listgame:
+                listrate = GameRate.objects.filter(gameid = ga)
+                countrate = 0
+                for rate in listrate:
+                    countrate += rate.rate
+                numlistrate = len(countrate)
+                if numlistrate > 0:
+                    grate = countrate/numlistrate
+
+            countforum = len(Forum.objects.filter(subjectid=subject.subjectid))
+            countprojectshare = len(ProjectShare.objects.filter(enviromentcateid=subject.enviromentcateid))
+
             context = {
                 'account':account,
                 'subject':subject,
@@ -135,6 +150,10 @@ def coursepart(request, id):
                 'subpart3':subpart3,
                 'subpart4':subpart4,
                 'subpartdetail':subpartdetail,
+                'countgame':countgame,
+                'grate': grate,
+                'countforum':countforum,
+                'countprojectshare':countprojectshare,
             }
             return render(request,'course/coursepart.html', context)
         else:
@@ -854,7 +873,7 @@ def coursecreate(request):
                     editdate = datetime.now(),
                     subjectpartname  = "Nào ta cùng học",
                     content = '',
-                    avatar = '/media/ab.jpg',
+                    avatar = '/media/bc_baihoc.png',
                     order = 1
                 )
                 subpartnew1.save()
@@ -869,7 +888,7 @@ def coursecreate(request):
                     editdate = datetime.now(),
                     subjectpartname  = "Thế giới trò chơi",
                     content = '',
-                    avatar = '/media/ab.jpg',
+                    avatar = '/media/bc_trochoi.png',
                     order = 2
                 )
                 subpartnew2.save()
@@ -884,7 +903,7 @@ def coursecreate(request):
                     editdate = datetime.now(),
                     subjectpartname  = "Dự Án Của Em",
                     content = '',
-                    avatar = '/media/ab.jpg',
+                    avatar = '/media/bc_chiaseduan.png',
                     order = 3
                 )
                 subpartnew3.save()
@@ -899,7 +918,7 @@ def coursecreate(request):
                     editdate = datetime.now(),
                     subjectpartname  = "Cùng Nhau Thảo Luận",
                     content = '',
-                    avatar = '/media/ab.jpg',
+                    avatar = '/media/bc_diendang.png',
                     order = 4
                 )
                 subpartnew4.save()
@@ -2441,7 +2460,8 @@ def allcourse(request):
             }
         return render(request, 'homepage/listsubject.html', context)
         
-
+def mblock(request):
+     return render(request, 'course/mblock.html')
 
 
 
