@@ -9,7 +9,7 @@ from datetime import datetime
 
 # Create your views here.
 def gamelist(request,idsub):
-    
+    subject=Subject.objects.get(subjectid=idsub)
     allgame = Game.objects.filter(subjectid=idsub)
     arrRate = []
     for game in allgame:
@@ -43,11 +43,13 @@ def gamelist(request,idsub):
             'is_log': is_log,
             'account': account,
             'listgame': listgame,
+            'subject':subject
         }
         return render(request, 'usergame/gamelist.html', context)
     else:
         context = { 
             'listgame':listgame,
+            'subject':subject
         }
         return render(request, 'usergame/gamelist.html', context)
 
@@ -114,6 +116,7 @@ def gameplay(request, idgame):
         return redirect('usergame:gamedetail')
 
 def teachergamelist(request, idsub):
+    subject=Subject.objects.get(subjectid=idsub)
     if request.session.has_key('username'):
         account = Account.objects.get(username = request.session['username'])
         allgame = Game.objects.filter(subjectid=idsub).filter(accountid=account)
@@ -144,6 +147,7 @@ def teachergamelist(request, idsub):
         context = {
             'account': account,
             'listgame': listgame,
+            'subject':subject
         }
         return render(request, 'usergame/teachergamelist.html', context)
     else:
@@ -190,14 +194,14 @@ def teachergamecreate(request,idsub):
                     if nameScorm != '':
                         nameScorm = nameScorm.replace('/media/','')
                         nameScorm = nameScorm.replace('.zip','')
-                        s = '.' + urlavatar
-                        # s = '.'
+                        s = '.' + urlscorm
+                        #s = '.'
                         # m = "\\"
-                        # for i in urlscorm:
-                        #     if i == '/':
-                        #         s += m
-                        #     else:
-                        #         s += i
+                        #for i in urlscorm:
+                        #    if i == '/':
+                        #        s += m
+                        #    else:
+                        #        s += i
 
                         unzip = ZipFile(s)
                         urlunzip='./media/unzip/' + nameScorm
@@ -284,13 +288,13 @@ def teachergameedit(request,idsub,idgame):
                             nameScorm = nameScorm.replace('/media/','')
                             nameScorm = nameScorm.replace('.zip','')
                             s = '.' + urlscorm
-                            # s = '.'
-                            # m = "\\"
-                            # for i in urlscorm:
-                            #     if i == '/':
-                            #         s += m
-                            #     else:
-                            #         s += i
+                            s = '.'
+                            m = "\\"
+                            for i in urlscorm:
+                                if i == '/':
+                                    s += m
+                                else:
+                                    s += i
 
                             unzip = ZipFile(s)
                             urlunzip='./media/unzip/' + nameScorm

@@ -16,7 +16,8 @@
     <link rel="apple-touch-icon" type="image/x-icon" sizes="114x114" href="{% static 'homepage/img/apple-touch-icon-114x114-precomposed.png' %}">
     <link rel="apple-touch-icon" type="image/x-icon" sizes="144x144" href="{% static 'homepage/img/apple-touch-icon-144x144-precomposed.png' %}">
 
-    <!-- BASE CSS -->
+	<!-- BASE CSS -->
+	<script src="{% static 'homepage/js/jquery-2.2.4.min.js' %}"></script>
     <link href="{% static 'homepage/css/bootstrap.min.css' %}" rel="stylesheet">
     <link href="{% static 'homepage/css/style.css' %}" rel="stylesheet">
 	<link href="{% static 'homepage/css/vendors.css' %}" rel="stylesheet">
@@ -219,10 +220,14 @@
 						</div>
 					</li>
 					<li>
-					
+						
 					</li>
 					<li>
-						
+						{% if account.accounttypeid.accounttypeid == 1 or account.accounttypeid.accounttypeid == 2 %}
+						<a href="{% url 'usercompetition:listcompetition' %}" >
+						<button class="btn_1" style="height:30px;padding-top:7px;background: #662d91">Quản lí Cuộc Thi</button>
+						</a>
+						{% endif %}
 					</li>
 				</ul>
 			</div>
@@ -413,7 +418,7 @@
 	<!-- page -->
 
 	<!-- COMMON SCRIPTS -->
-    <script src="{% static 'homepage/js/jquery-2.2.4.min.js' %}"></script>
+    
     <script src="{% static 'homepage/js/common_scripts.js' %}"></script>
     <script src="{% static 'homepage/js/main.js' %}"></script>
 	<script src="{% static 'homepage/assets/validate.js' %}"></script>

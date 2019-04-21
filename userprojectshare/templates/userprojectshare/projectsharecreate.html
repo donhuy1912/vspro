@@ -169,7 +169,7 @@
 							{% comment %} <li><a href="{% url 'homepage:profile' account.accountid %}">Chỉnh Sửa Tài Khoản</a></li> {% endcomment %}
 							
 							<li><a href="{% url 'course:dashboard' %}"><i class="fa fa-home" style="font-size:14pt"></i>&nbsp Trang Chủ</a></li>
-							<li><a href="#"><i class="fa fa-id-badge" style="font-size:14pt"></i>&nbsp&nbsp Hồ Sơ</a></li>
+							<li><a href="{% url 'homepage:myprofile' account.accountid %}"><i class="fa fa-id-badge" style="font-size:14pt"></i>&nbsp&nbsp Hồ Sơ</a></li>
 							
 
 							{% if account.accounttypeid.accounttypeid == 1 %}
@@ -247,7 +247,7 @@
                             
                             
                             <label id="lbopen"  for="datebegin" class="create"></label><br>
-                            <label for="avatar" class="create">Poster Cuộc Thi*</label> 
+                            <label for="avatar" class="create">Poster Sản Phẩm*</label> 
                             <br>
                             <label id="butavar" type="file" for="upload" class="btn_1 rounded " style="width: auto;background-color: #3f9fff">Chọn Ảnh </label>	
                             <input id="upload" name="avatar" type="file" style="display:none" required="required">

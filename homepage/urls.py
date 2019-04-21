@@ -1,5 +1,5 @@
 from django.urls import path
-from . import views
+from . import views,ajax
 from django.conf.urls import url
 
 
@@ -31,6 +31,6 @@ urlpatterns = [
 
     url(r'^ajax/validate_username/$', views.validate_username, name='validate_username'),
     # url(r'^ajax/validate_email/$', views.validate_email, name='validate_email')
-
+    path('ajax/ajaxsentmes/', ajax.ajaxsentmes, name="ajaxsentmes"),
  
 ]

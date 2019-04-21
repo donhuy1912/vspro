@@ -185,7 +185,7 @@
 							{% comment %} <li><a href="{% url 'homepage:profile' account.accountid %}">Chỉnh Sửa Tài Khoản</a></li> {% endcomment %}
 							
 							<li><a href="{% url 'course:dashboard' %}"><i class="fa fa-home" style="font-size:14pt"></i>&nbsp Trang Chủ</a></li>
-							<li><a href="#"><i class="fa fa-id-badge" style="font-size:14pt"></i>&nbsp&nbsp Hồ Sơ</a></li>
+							<li><a href="{% url 'homepage:myprofile' account.accountid %}"><i class="fa fa-id-badge" style="font-size:14pt"></i>&nbsp&nbsp Hồ Sơ</a></li>
 							
 
 							{% if account.accounttypeid.accounttypeid == 1 %}

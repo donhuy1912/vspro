@@ -47,13 +47,18 @@
 	 <link href="{% static 'ckeditor/ckeditor_uploader/admin_base.css' %}" rel="stylesheet">
 	 <script type="text/javascript" src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
 	 <script type="text/javascript" src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
+	 <script>
+		function resizeIframe(obj) {
+		  obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
+		}
+	  </script>
 </head>
 
 <body class="nav-md" style="background: #121921;">
 	
 	<div id="page" class="theia-exception" style="height: auto;min-height: 600px">
 		
-		<header class="header menu_2">
+		<header id='header' class="header menu_2">
 			<div id="preloader"><div data-loader="circle-side"></div></div><!-- /Preload -->
 			<div id="logo">
 				<a href="{% url 'homepage:index' %}"><img src="{% static 'homepage/img/logo_2x.png' %}" width="149" height="42" data-retina="true" alt=""></a>
@@ -170,7 +175,7 @@
 							{% comment %} <li><a href="{% url 'homepage:profile' account.accountid %}">Chỉnh Sửa Tài Khoản</a></li> {% endcomment %}
 							
 							<li><a href="{% url 'course:dashboard' %}"><i class="fa fa-home" style="font-size:14pt"></i>&nbsp Trang Chủ</a></li>
-							<li><a href="#"><i class="fa fa-id-badge" style="font-size:14pt"></i>&nbsp&nbsp Hồ Sơ</a></li>
+							<li><a href="{% url 'homepage:myprofile' account.accountid %}"><i class="fa fa-id-badge" style="font-size:14pt"></i>&nbsp&nbsp Hồ Sơ</a></li>
 							
 
 							{% if account.accounttypeid.accounttypeid == 1 %}
@@ -347,7 +352,7 @@
       	<div class="">
 			
       		<div class="page-title">
-      			<div class="title_left">
+      			<div class="title_left" style="width:100%">
 					  <h3 style="color: #ffc107">HĐ {{activity.order}}: {{activity.activityname}}</h3>
 					  
 				  </div>
@@ -435,13 +440,15 @@
       							<li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
       							</li>
       							<li class="dropdown">
-
+									
       							</li>
       							
       						</ul>
-      						<div class="clearfix"></div>
+							  <div class="clearfix"></div>
+							  
       					</div>
-      					<div class="x_content">
+      					<div class="x_content" >
+								{{activity.content|safe}}
 							<div id="divscorm" style="display:none">
 
       						<section id="web-application">
@@ -449,7 +456,7 @@
       							{% comment %} {{activity.content|safe}} {% endcomment %}
 							<div style="width:100%;" align="center">
 								<!-- Can src hop ly-->
-								<iframe allowfullscreen style="width:765px; height:480px;"  src="{{activity.link}}" id="iframe" >
+								<iframe  style="width:1400px; height:768px;"  src="{{activity.link}}" id="iframe" onload="resizeIframe(this)" allowfullscreen>
 								</iframe>
 							</div>
 							  </section>
@@ -843,6 +850,7 @@
 	var zoomout = $("#zoomout");
 	var rightpart=$("#rightpart");
 	var iframe =$("#iframe");
+	var header =$("#header");
 	$("#zoomout").click(function()
 	{
 		zoomin.css({"display":""});
@@ -850,13 +858,18 @@
 		headpart.css({"display":"none"});
 		leftpart.css({"display":"none"});
 		hero_in.css({"display":"none"});
+		header.css({"display":"none"});
 		stickpart.css({"display":"none"});
 		rew.css({"display":"none"});
-		rightpart.css({"margin-left":"10%"});
+		rightpart.css({"margin-left":"2%"});
 		window.scrollTo(0,100);
 		$("#learn").css({"height":"900px"});
-		iframe.css({"height":"685px"});
+		iframe.css({"height":"900px"});
+		iframe.css({"padding-left":"1px"});
 		$("#divscorm").css({"display":""});
+		$("#learn").attr('class','sss');
+		iframe.zoom = "20%"
+		
 	});
 	$("#zoomin").click(function()
 	{
@@ -865,13 +878,16 @@
 		headpart.css({"display":""});
 		leftpart.css({"display":""});
 		hero_in.css({"display":""});
+		header.css({"display":""});
 		stickpart.css({"display":""});
 		rew.css({"display":""});
 		rightpart.css({"margin-left":"280px"});
 		window.scrollTo(0,500);
-		iframe.css({"height":"600px"});
+		iframe.css({"height":"768px"});
 		$("#learn").css({"height":"auto"});
 		$("#divscorm").css({"display":"none"});
+		$("#learn").attr('class','x_panel');
+		document.body.style.zoom = "100%"
 	});
 </script>
 

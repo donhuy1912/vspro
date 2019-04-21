@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<bwFrame xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" default_layout="npnxnanbnsnfns00000000101" textdirection="ltr" device="false" fontscale="100" kbshortcuts="false" skip_nav_enabled="true" outputtype="undefined" theme="classic">
+<bwFrame xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" default_layout="pxabnsnfns00000000101" textdirection="ltr" device="false" fontscale="100" kbshortcuts="false" skip_nav_enabled="true" outputtype="undefined" theme="classic">
   <layouts>
-    <layout name="npnxnanbsnfns00000000101" font="Open Sans" controllayout="npnxnanbsnfns00000000101" colorscheme="npnxnanbnsnfns00000000101" string_table="npnxnanbnsnfns00000000101" />
-    <layout name="pxabnsnfns00000000101" font="Open Sans" controllayout="pxabnsnfns00000000101" colorscheme="npnxnanbnsnfns00000000101" string_table="npnxnanbnsnfns00000000101" />
-    <layout name="npxnabnsnfns00000000101" font="Open Sans" controllayout="npxnabnsnfns00000000101" colorscheme="npnxnanbnsnfns00000000101" string_table="npnxnanbnsnfns00000000101" />
-    <layout name="npnxnanbnsnfns00000000101" font="Open Sans" controllayout="npnxnanbnsnfns00000000101" colorscheme="npnxnanbnsnfns00000000101" string_table="npnxnanbnsnfns00000000101" />
-    <layout name="pxabnsnfns00000000100" font="Open Sans" controllayout="pxabnsnfns00000000100" colorscheme="npnxnanbnsnfns00000000101" string_table="npnxnanbnsnfns00000000101" />
+    <layout name="npnxnanbsnfns00000000101" font="Open Sans" controllayout="npnxnanbsnfns00000000101" colorscheme="pxabnsnfns00000000101" string_table="pxabnsnfns00000000101" />
+    <layout name="pxabnsnfns00000000101" font="Open Sans" controllayout="pxabnsnfns00000000101" colorscheme="pxabnsnfns00000000101" string_table="pxabnsnfns00000000101" />
+    <layout name="npxnabnsnfns00000000101" font="Open Sans" controllayout="npxnabnsnfns00000000101" colorscheme="pxabnsnfns00000000101" string_table="pxabnsnfns00000000101" />
+    <layout name="npnxnanbnsnfns00000000101" font="Open Sans" controllayout="npnxnanbnsnfns00000000101" colorscheme="pxabnsnfns00000000101" string_table="pxabnsnfns00000000101" />
+    <layout name="pxabnsnfns00000000100" font="Open Sans" controllayout="pxabnsnfns00000000100" colorscheme="pxabnsnfns00000000101" string_table="pxabnsnfns00000000101" />
   </layouts>
   <control_options>
     <optiongroups>
@@ -197,7 +197,7 @@
     </control_layout>
   </control_layouts>
   <colorschemes>
-    <colorscheme name="npnxnanbnsnfns00000000101">
+    <colorscheme name="pxabnsnfns00000000101">
       <color_group name="infopanel">
         <group_colors>
           <color name="link_text">
@@ -1103,7 +1103,7 @@
     </colorscheme>
   </colorschemes>
   <string_tables>
-    <string_table name="npnxnanbnsnfns00000000101">
+    <string_table name="pxabnsnfns00000000101">
       <string id="check_include">Check to include</string>
       <string id="clear">Clear and return to menu</string>
       <string id="close">Close</string>
@@ -1164,14 +1164,15 @@
       <links>
         <slidelink slideid="_player.6h21bYh2Fil" displaytext="hoạt động 5" expand="true" type="slide">
           <links>
+            <slidelink slideid="_player.6h21bYh2Fil.6nvXvk2YhCG" displaytext="Untitled Slide" expand="false" type="slide" />
             <slidelink slideid="_player.6h21bYh2Fil.62a2LhMzrxm" displaytext="Untitled Slide" expand="false" type="slide" />
             <slidelink slideid="_player.6h21bYh2Fil.5vZNlFtN28O" displaytext="Untitled Slide" expand="false" type="slide" />
-            <slidelink slideid="_player.6h21bYh2Fil.6kovUjYVpnU" displaytext="Drag and Drop" expand="false" type="slide" />
             <slidelink slideid="_player.6h21bYh2Fil.5gItP6HW4sY" displaytext="Pick One" expand="false" type="slide" />
             <slidelink slideid="_player.6h21bYh2Fil.5zitMpJEJXJ" displaytext="Hotspot" expand="false" type="slide" />
-            <slidelink slideid="_player.6h21bYh2Fil.6qre5zmqQqQ" displaytext="Trong Mlock3  thao tác thiết đặt để làm việc với chế độ Arduino là gì ?" expand="false" type="slide" />
-            <slidelink slideid="_player.6h21bYh2Fil.67y60JmcJRY" displaytext="Trong Mlock3  để tiến hành nap code cho arduino, ta thực hiện?" expand="false" type="slide" />
-            <slidelink slideid="_player.6h21bYh2Fil.6LyTzAJOsLH" displaytext="Trong Mlock3  để tiến hành edit code cho arduino bằng Arduino IDE tích hợp, ta thực hiện?" expand="false" type="slide" />
+            <slidelink slideid="_player.6h21bYh2Fil.6qre5zmqQqQ" displaytext="để kiểm tra giá trị đo của cảm biến siêu âm, ta cần bật Serial Monitor bằng cách nào ?" expand="false" type="slide" />
+            <slidelink slideid="_player.6h21bYh2Fil.67y60JmcJRY" displaytext="Chân GND trong cảm biến siêu âm có tác dụng gì ?" expand="false" type="slide" />
+            <slidelink slideid="_player.6h21bYh2Fil.6LyTzAJOsLH" displaytext="Tầm hoạt động tối đa của cảm biến siêu âm là bao nhiêu ?" expand="false" type="slide" />
+            <slidelink slideid="_player.6h21bYh2Fil.6gIPCxLAbrn" displaytext="Cảm biến siêu âm có thể dùng để nhận biết màu sắc ?" expand="false" type="slide" />
             <slidelink slideid="_player.6h21bYh2Fil.5wbbBMg1cTn" displaytext="Untitled Slide" expand="false" type="slide" />
           </links>
         </slidelink>

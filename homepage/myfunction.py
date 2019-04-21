@@ -412,14 +412,14 @@ def getChapterLessson(subject, account):
                 checkpass="pointer-events:none"
         bfchap +=1
         lessons = Lesson.objects.filter(chapterid = chapter).order_by('order')
-        nameChap = 'Bài ' + str(chaporder) + ': ' + chapter.chaptername 
+        nameChap =  str(chaporder) + '. ' + chapter.chaptername 
         chaporder += 1
         # xử lý tên lesson
         lessorder = 1
         numChapid = chapter.chapterid
         chapter.chapterid = 'check' + '(' + str(chapter.chapterid) + ')' 
         for lesson in lessons:
-            lesson.lessonname = 'Chủ đề ' + str(lessorder) + ': ' + lesson.lessonname
+            lesson.lessonname = str(chaporder-1)+'. ' + str(lessorder) + '. ' + lesson.lessonname
             lessorder += 1
         temp = ChapAndLess(chapter.chapterid, nameChap, lessons, numChapid, checkpass)
         result.append(temp)
@@ -447,9 +447,9 @@ def getItemActivity(lesson):
     for item in items:
         activityorder = 1
         activities = Activity.objects.filter(itemid=item).order_by('order')
-        item.itemname = str(itemorder) +'/ '+item.itemname
+        item.itemname =item.itemname
         for activity in activities:
-            activity.activityname= 'Hoạt động '+ str(activityorder)+': '+ activity.activityname
+            activity.activityname=  str(activityorder)+'. '+ activity.activityname
             activityorder +=1
         temp=ItemAndActivity(item,activities)
         result.append(temp)
